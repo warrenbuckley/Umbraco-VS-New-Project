@@ -1,0 +1,5 @@
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\Umbraco.VS.NewProject.Package.vsix
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\extension.vsixmanifest
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\obj\Debug\Umbraco.VS.NewProject.Package.dll
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\obj\Debug\Umbraco.VS.NewProject.Package.pdb
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\obj\Debug\extension.vsixmanifest

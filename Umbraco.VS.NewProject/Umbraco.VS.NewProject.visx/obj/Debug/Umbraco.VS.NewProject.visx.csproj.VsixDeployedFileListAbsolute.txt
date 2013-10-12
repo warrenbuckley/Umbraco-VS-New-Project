@@ -1,0 +1,2 @@
+C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco File New Project\1.0.0\\extension.vsixmanifest
+C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco File New Project\1.0.0\ProjectTemplates\Web\\1033\Umbraco.VS.NewProject.zip

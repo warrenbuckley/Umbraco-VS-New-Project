@@ -1,0 +1,5 @@
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject\bin\Debug\ProjectTemplates\CSharp\1033\Umbraco.VS.NewProject.zip
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject\obj\Debug\CSharp\1033\Umbraco.VS.NewProject.zip
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject\obj\Debug\Umbraco.VS.NewProject.dll
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject\obj\Debug\Umbraco.VS.NewProject.pdb
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject\obj\Debug\Umbraco.VS.NewProject.csprojResolveAssemblyReference.cache
