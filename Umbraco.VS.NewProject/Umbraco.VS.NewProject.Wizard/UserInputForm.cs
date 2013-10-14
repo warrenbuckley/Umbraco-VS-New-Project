@@ -13,6 +13,7 @@ using System.Xml;
 using umbraco;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
+using ApplicationContext = Umbraco.Core.ApplicationContext;
 
 namespace Umbraco.VS.NewProject.Wizard
 {
@@ -129,6 +130,39 @@ namespace Umbraco.VS.NewProject.Wizard
                 //Updates config value...
                 UpdateRenderingEngine(RenderingEngine.WebForms);
             }
+
+
+
+            Log.Text += "Starting ApplicationBase\r\n";
+            NewProjectApplicationBase application = new NewProjectApplicationBase();
+            application.Start(application, new EventArgs());
+            Log.Text += " > Done\r\n";
+            Log.Text += "\r\n";
+
+
+            Log.Text += "Getting reference to ApplicationContext\r\n";
+            ApplicationContext context = ApplicationContext.Current;
+            if (context == null) {
+                Log.Text += " > Failed\r\n";
+                return;
+            }
+            Log.Text += " > Done\r\n";
+            Log.Text += "\r\n";
+
+
+            Log.Text += "Getting reference to DatabaseContext\r\n";
+            var database = context.DatabaseContext;
+            if (database == null) {
+                Log.Text += " > Failed\r\n";
+                return;
+            }
+            Log.Text += " > Done\r\n";
+            Log.Text += "\r\n";
+
+
+
+            return;
+
 
 
 
