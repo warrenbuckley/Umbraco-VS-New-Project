@@ -53,6 +53,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Umbraco.VS.NewProject.Wizard\Umbraco.VS.NewProject.Wizard.csproj">
+      <Project>{67443567-DF5D-494F-8CB2-368F8B1E8D46}</Project>
+      <Name>Umbraco.VS.NewProject.Wizard</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\Umbraco.VS.NewProject\Umbraco.VS.NewProject.csproj">
       <Project>{6C590299-5924-410A-BCAE-70B42FAE0595}</Project>
       <Name>Umbraco.VS.NewProject</Name>

@@ -13,5 +13,6 @@
   </Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="Umbraco.VS.NewProject" d:TargetPath="|Umbraco.VS.NewProject;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
+    <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Umbraco.VS.NewProject.Wizard" Path="|Umbraco.VS.NewProject.Wizard|" AssemblyName="|Umbraco.VS.NewProject.Wizard;AssemblyName|" />
   </Assets>
 </PackageManifest>

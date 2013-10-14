@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>Umbraco - New Project (From Nuget)</Name>
+    <Name>Umbraco - New Project (From Nuget with Wizard)</Name>
      <Description>Allows you to easily create a new Umbraco project and fetches the latest version from NuGet</Description>
     <Icon>Umbraco.VS.NewProject.ico</Icon>
     <ProjectType>CSharp</ProjectType>
@@ -21,6 +21,10 @@
   <WizardExtension>
     <Assembly>NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</Assembly>
     <FullClassName>NuGet.VisualStudio.TemplateWizard</FullClassName>
+  </WizardExtension>
+  <WizardExtension>
+    <Assembly>Umbraco.VS.NewProject.Wizard, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=null</Assembly>
+    <FullClassName>Umbraco.VS.NewProject.Wizard.Wizard</FullClassName>
   </WizardExtension>
   <WizardData>
     <packages repository="extension" repositoryId="Umbraco.VS.NewProject.Package..bce59885-b7d0-4e94-9fdb-d2665d2d021c">
