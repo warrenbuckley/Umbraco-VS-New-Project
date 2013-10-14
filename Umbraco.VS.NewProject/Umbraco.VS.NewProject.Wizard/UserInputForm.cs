@@ -18,6 +18,7 @@ namespace Umbraco.VS.NewProject.Wizard
 {
     public partial class UserInputForm : Form
     {
+
         //New items
         private string dbConnectionString;
         private string dbType;
@@ -142,10 +143,9 @@ namespace Umbraco.VS.NewProject.Wizard
                 dbConnectionString  = "Datasource=|DataDirectory|Umbraco.sdf";
                 dbType              = "CE";
 
-
+                
                 //Use Umbraco DB API - Create CE DB & updates web.config
                 //Values aboved not needed/used, as API does it for us
-
                 if (Umbraco.Core.ApplicationContext.Current != null)
                 {
                     //Setup DB config - SQL CE
@@ -200,13 +200,15 @@ namespace Umbraco.VS.NewProject.Wizard
             var value = engine;
 
             //Load the config file as xml
-            var xml             = new XmlDocument();
-            var settingsReader  = new XmlTextReader(filePath);
+            var xml = new XmlDocument();
 
             try
             {
-                //Load the XML file
-                xml.Load(settingsReader);
+                using (XmlReader reader = XmlReader.Create(filePath))
+                {
+                    //Load XML
+                    xml.Load(reader);
+                }
 
                 //Find the correct node for the 'defaultRenderingEngine' and update the value
                 if (xml.DocumentElement != null)
@@ -221,18 +223,15 @@ namespace Umbraco.VS.NewProject.Wizard
                     }
                 }
 
-                //Save the file back down...
-                xml.Save(filePath); 
+                //Save file
+                xml.Save(filePath);
+
             }
             catch (Exception ex)
             {
                 //Otherwise disable the button & show error message
                 MessageBox.Show("Exception: " + ex.Message, "Update Rendering Engine Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            
-
-            
         }
     }
 }
