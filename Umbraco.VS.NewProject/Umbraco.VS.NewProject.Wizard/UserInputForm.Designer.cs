@@ -37,6 +37,7 @@
             this.rdoWebForms = new System.Windows.Forms.RadioButton();
             this.rdoMVC = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Log = new System.Windows.Forms.Label();
             this.pnlCustomDB.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -156,11 +157,20 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Please choose your DB type:";
             // 
+            // Log
+            // 
+            this.Log.AutoSize = true;
+            this.Log.Location = new System.Drawing.Point(520, 13);
+            this.Log.Name = "Log";
+            this.Log.Size = new System.Drawing.Size(0, 13);
+            this.Log.TabIndex = 15;
+            // 
             // UserInputForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 305);
+            this.ClientSize = new System.Drawing.Size(949, 305);
+            this.Controls.Add(this.Log);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pnlCustomDB);
@@ -175,6 +185,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -191,5 +202,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rdoWebForms;
         private System.Windows.Forms.RadioButton rdoMVC;
+        private System.Windows.Forms.Label Log;
     }
 }
