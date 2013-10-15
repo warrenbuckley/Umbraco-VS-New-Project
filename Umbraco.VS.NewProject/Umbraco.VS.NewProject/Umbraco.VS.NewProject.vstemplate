@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>Umbraco - New Project (From Nuget with Wizard)</Name>
+    <Name>Umbraco - New Project</Name>
      <Description>Allows you to easily create a new Umbraco project and fetches the latest version from NuGet</Description>
     <Icon>Umbraco.VS.NewProject.ico</Icon>
     <ProjectType>CSharp</ProjectType>
