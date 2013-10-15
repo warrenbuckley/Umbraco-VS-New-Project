@@ -132,41 +132,6 @@ namespace Umbraco.VS.NewProject.Wizard
             }
 
 
-
-            string projectDirectory = Path.GetDirectoryName(CSProjPath);
-
-
-            Log.Text += "Starting ApplicationBase (" + projectDirectory + ")\r\n";
-            NewProjectApplicationBase application = new NewProjectApplicationBase(projectDirectory);
-            application.Start(application, new EventArgs());
-            Log.Text += " > Done\r\n";
-            Log.Text += "\r\n";
-
-
-            Log.Text += "Getting reference to ApplicationContext\r\n";
-            ApplicationContext context = ApplicationContext.Current;
-            if (context == null) {
-                Log.Text += " > Failed\r\n";
-                return;
-            }
-            Log.Text += " > Done\r\n";
-            Log.Text += "\r\n";
-
-
-            Log.Text += "Getting reference to DatabaseContext\r\n";
-            var database = context.DatabaseContext;
-            if (database == null) {
-                Log.Text += " > Failed\r\n";
-                return;
-            }
-            Log.Text += " > Done\r\n";
-            Log.Text += "\r\n";
-
-
-
-
-
-
             //Fetch DB choice (CE or custom)
             //If CE create CE db file and update web.config connection
             if (rdoSQLCE.Checked)
@@ -178,37 +143,14 @@ namespace Umbraco.VS.NewProject.Wizard
                 dbConnectionString  = "Datasource=|DataDirectory|Umbraco.sdf";
                 dbType              = "CE";
 
+                if (Umbraco.Core.ApplicationContext.Current != null)
+                {
+                    //Setup DB config - manual DB connection
+                    Umbraco.Core.ApplicationContext.Current.DatabaseContext.ConfigureEmbeddedDatabaseConnection();
 
-
-
-
-
-                try {
-                    Log.Text += "Setting up configuration for embedded database\r\n";
-                    database.ConfigureEmbeddedDatabaseConnection();
-                    Log.Text += " > Done\r\n";
-                    Log.Text += "\r\n";
-                } catch (Exception ex) {
-                    Log.Text += "An error occured while trying to install the database schema\r\n";
-                    Log.Text += ex.Message + "\r\n";
-                    Log.Text += ex.StackTrace + "\r\n";
-                    return;
+                    //Use API to create DB schema... (Skips Web Installer)
+                    Umbraco.Core.ApplicationContext.Current.DatabaseContext.Database.CreateDatabaseSchema();
                 }
-
-
-                try {
-                    Log.Text += "Installing the database\r\n";
-                    database.Database.CreateDatabaseSchema();
-                    Log.Text += "The database schema has been installed\r\n";
-                    Log.Text += " > Done\r\n";
-                    Log.Text += "\r\n";
-                } catch (Exception ex) {
-                    Log.Text += "An error occured while trying to install the database schema\r\n";
-                    Log.Text += ex.Message + "\r\n";
-                    Log.Text += ex.StackTrace + "\r\n";
-                    return;
-                }
-
 
             }
             else if (rdoCustomDB.Checked)

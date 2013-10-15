@@ -152,7 +152,7 @@
             this.groupBox2.Controls.Add(this.rdoCustomDB);
             this.groupBox2.Location = new System.Drawing.Point(143, 90);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(367, 69);
+            this.groupBox2.Size = new System.Drawing.Size(370, 69);
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Please choose your DB type:";
@@ -170,7 +170,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(949, 305);
+            this.ClientSize = new System.Drawing.Size(523, 305);
             this.Controls.Add(this.Log);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);

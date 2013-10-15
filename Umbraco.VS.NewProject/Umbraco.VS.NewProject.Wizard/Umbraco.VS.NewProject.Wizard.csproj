@@ -202,8 +202,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NewProjectApplicationBase.cs" />
-    <Compile Include="NewProjectBootManager.cs" />
     <Compile Include="UserInputForm.cs">
       <SubType>Form</SubType>
     </Compile>
