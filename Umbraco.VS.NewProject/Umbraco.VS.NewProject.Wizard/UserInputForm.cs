@@ -133,8 +133,11 @@ namespace Umbraco.VS.NewProject.Wizard
 
 
 
-            Log.Text += "Starting ApplicationBase\r\n";
-            NewProjectApplicationBase application = new NewProjectApplicationBase();
+            string projectDirectory = Path.GetDirectoryName(CSProjPath);
+
+
+            Log.Text += "Starting ApplicationBase (" + projectDirectory + ")\r\n";
+            NewProjectApplicationBase application = new NewProjectApplicationBase(projectDirectory);
             application.Start(application, new EventArgs());
             Log.Text += " > Done\r\n";
             Log.Text += "\r\n";
@@ -161,8 +164,6 @@ namespace Umbraco.VS.NewProject.Wizard
 
 
 
-            return;
-
 
 
 
@@ -177,16 +178,35 @@ namespace Umbraco.VS.NewProject.Wizard
                 dbConnectionString  = "Datasource=|DataDirectory|Umbraco.sdf";
                 dbType              = "CE";
 
-                
-                //Use Umbraco DB API - Create CE DB & updates web.config
-                //Values aboved not needed/used, as API does it for us
-                if (Umbraco.Core.ApplicationContext.Current != null)
-                {
-                    //Setup DB config - SQL CE
-                    Umbraco.Core.ApplicationContext.Current.DatabaseContext.ConfigureEmbeddedDatabaseConnection();
 
-                    //Use API to create DB schema... (Skips Web Installer)
-                    Umbraco.Core.ApplicationContext.Current.DatabaseContext.Database.CreateDatabaseSchema();
+
+
+
+
+                try {
+                    Log.Text += "Setting up configuration for embedded database\r\n";
+                    database.ConfigureEmbeddedDatabaseConnection();
+                    Log.Text += " > Done\r\n";
+                    Log.Text += "\r\n";
+                } catch (Exception ex) {
+                    Log.Text += "An error occured while trying to install the database schema\r\n";
+                    Log.Text += ex.Message + "\r\n";
+                    Log.Text += ex.StackTrace + "\r\n";
+                    return;
+                }
+
+
+                try {
+                    Log.Text += "Installing the database\r\n";
+                    database.Database.CreateDatabaseSchema();
+                    Log.Text += "The database schema has been installed\r\n";
+                    Log.Text += " > Done\r\n";
+                    Log.Text += "\r\n";
+                } catch (Exception ex) {
+                    Log.Text += "An error occured while trying to install the database schema\r\n";
+                    Log.Text += ex.Message + "\r\n";
+                    Log.Text += ex.StackTrace + "\r\n";
+                    return;
                 }
 
 

@@ -9,12 +9,14 @@ namespace Umbraco.VS.NewProject.Wizard {
     /// </summary>
     public class NewProjectBootManager : CoreBootManager {
             
-        public NewProjectBootManager(UmbracoApplicationBase umbracoApplication) : base(umbracoApplication) {
+        public NewProjectBootManager(UmbracoApplicationBase umbracoApplication, string baseDirectory) : base(umbracoApplication) {
             
             //This is only here to ensure references to the assemblies needed for the DataTypesResolver
             //otherwise they won't be loaded into the AppDomain.
             var interfacesAssemblyName = typeof(IDataType).Assembly.FullName;
             var editorControlsAssemblyName = typeof(uploadField).Assembly.FullName;
+
+            base.InitializeApplicationRootPath(baseDirectory);
         
         }
 
