@@ -155,6 +155,7 @@
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Please choose your DB type:";
+            this.groupBox2.Visible = false;
             // 
             // UserInputForm
             // 
