@@ -16,6 +16,7 @@
   <TemplateContent>
     <Project File="ProjectTemplate.csproj" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="Properties\AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Web.config">Web.config</ProjectItem>
     </Project>
   </TemplateContent>
   <WizardExtension>
@@ -23,7 +24,7 @@
     <FullClassName>NuGet.VisualStudio.TemplateWizard</FullClassName>
   </WizardExtension>
   <WizardExtension>
-    <Assembly>Umbraco.VS.NewProject.Wizard, Version=1.1.1.0, Culture=Neutral, PublicKeyToken=null</Assembly>
+    <Assembly>Umbraco.VS.NewProject.Wizard, Version=1.1.2.0, Culture=Neutral, PublicKeyToken=null</Assembly>
     <FullClassName>Umbraco.VS.NewProject.Wizard.Wizard</FullClassName>
   </WizardExtension>
   <WizardData>

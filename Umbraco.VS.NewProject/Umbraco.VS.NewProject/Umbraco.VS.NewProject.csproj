@@ -59,7 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AssemblyInfo.cs" />
-    <None Include="ProjectTemplate.csproj" />
+    <None Include="ProjectTemplate.csproj">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="Umbraco.VS.NewProject.vstemplate">
