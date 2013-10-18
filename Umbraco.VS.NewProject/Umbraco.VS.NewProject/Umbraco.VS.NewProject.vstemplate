@@ -27,9 +27,12 @@
     <Assembly>Umbraco.VS.NewProject.Wizard, Version=1.1.2.0, Culture=Neutral, PublicKeyToken=null</Assembly>
     <FullClassName>Umbraco.VS.NewProject.Wizard.Wizard</FullClassName>
   </WizardExtension>
+  <!--
   <WizardData>
     <packages repository="extension" repositoryId="Umbraco.VS.NewProject.Package..bce59885-b7d0-4e94-9fdb-d2665d2d021c">
       <package id="UmbracoCms" version="6.1.6" />
+      <package id="UmbracoCms.Core" version="6.1.6" />
     </packages>
   </WizardData>
+  -->
 </VSTemplate>
