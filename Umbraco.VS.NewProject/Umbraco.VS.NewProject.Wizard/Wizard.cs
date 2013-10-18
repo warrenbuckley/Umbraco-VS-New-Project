@@ -17,6 +17,7 @@ namespace Umbraco.VS.NewProject.Wizard
     {
         private UserInputForm inputForm;
         private DTE _dte;
+        private string _csProjPath;
         private string _projectPath;
         private string _solutionPath;
         private string _packagePath;
@@ -32,7 +33,7 @@ namespace Umbraco.VS.NewProject.Wizard
         {
             _dte = (DTE)automationObject;
 
-            Debug.Write("Umbraco New Project - RunStarted() event");
+            Debug.WriteLine("Umbraco New Project - RunStarted() event");
         }
 
         /// <summary>
@@ -41,12 +42,13 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="project">The project that finished generating.</param>
         public void ProjectFinishedGenerating(Project project)
         {
-            Debug.Write("Umbraco New Project - ProjectFinishedGenerating() event");
+            Debug.WriteLine("Umbraco New Project - ProjectFinishedGenerating() event");
 
             try
             {
-                var csProj      = project.FileName;
-                _projectPath    = Path.GetDirectoryName(csProj);
+                //File Path stuff
+                _csProjPath     = project.FileName;
+                _projectPath    = Path.GetDirectoryName(_csProjPath);
                 _solutionPath   = Path.GetDirectoryName(_projectPath);
                 _packagePath    = Path.Combine(_solutionPath, "packages");
 
@@ -80,7 +82,7 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="projectItem">The project item that finished generating.</param>
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
-            Debug.Write("Umbraco New Project - ProjectItemFinishedGenerating() event");
+            Debug.WriteLine("Umbraco New Project - ProjectItemFinishedGenerating() event");
         }
 
 
@@ -103,7 +105,7 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="projectItem">The project item that will be opened.</param>
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
-            Debug.Write("Umbraco New Project - BeforeOpeningFile() event");
+            Debug.WriteLine("Umbraco New Project - BeforeOpeningFile() event");
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace Umbraco.VS.NewProject.Wizard
         /// </summary>
         public void RunFinished()
         {
-            Debug.Write("Umbraco New Project - RunFinished() event");
+            Debug.WriteLine("Umbraco New Project - RunFinished() event");
         }
 
 
@@ -121,8 +123,8 @@ namespace Umbraco.VS.NewProject.Wizard
             _dte.StatusBar.Text = "Umbraco New Project - Getting Umbraco (Please Wait)";
 
             //Debug
-            Debug.Write("Umbraco New Project - GetUmbraco() event");
-            Debug.Write("Package Path: " + _packagePath);
+            Debug.WriteLine("Umbraco New Project - GetUmbraco() event");
+            Debug.WriteLine("Package Path: " + _packagePath);
 
             //Get Packages folder at solution level
             var packagePath = _packagePath;
@@ -192,9 +194,8 @@ namespace Umbraco.VS.NewProject.Wizard
             var packagesDirectory = fileSystem.Root;
 
             //Variables needed to create a projectManager object
-            string webRepositoryDirectory       = _projectPath;
             IPackageRepository sourceRepository = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-            IPackagePathResolver pathResolver   = new DefaultPackagePathResolver(webRepositoryDirectory);
+            IPackagePathResolver pathResolver   = new DefaultPackagePathResolver(_solutionPath);
             IPackageRepository localRepository  = PackageRepositoryFactory.Default.CreateRepository(packagesDirectory);
             IProjectSystem project              = new WebProjectSystem(_projectPath);
             
@@ -202,8 +203,42 @@ namespace Umbraco.VS.NewProject.Wizard
             //Not sure passing correct params in here...
             ProjectManager projectManager       = new ProjectManager(sourceRepository, pathResolver, project, localRepository);
 
+            //Add Package to Project - Wire up Events
+            projectManager.PackageReferenceAdded += projectManager_PackageReferenceAdded;
+            projectManager.PackageReferenceAdding += projectManager_PackageReferenceAdding;
+
             //Add package to project
-            projectManager.AddPackageReference(package, true, false); 
+            try
+            {
+                projectManager.AddPackageReference(package, true, false);
+            }
+            catch (Exception)
+            {   
+                throw;
+            }
+        }
+
+        void projectManager_PackageReferenceAdding(object sender, PackageOperationEventArgs e)
+        {
+            var package = e.Package;
+            var installPath = e.InstallPath;
+            var fileSystem = e.FileSystem;
+            var targetPath = e.TargetPath;
+
+        }
+
+        /// <summary>
+        /// When a package is being added to the project itself
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void projectManager_PackageReferenceAdded(object sender, PackageOperationEventArgs e)
+        {
+            var package     = e.Package;
+            var installPath = e.InstallPath;
+            var fileSystem  = e.FileSystem;
+            var targetPath  = e.TargetPath;
+
         }
     }
 }
