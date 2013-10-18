@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Web.WebPages.Administration.PackageManager;
 using Microsoft.VisualStudio.TemplateWizard;
 using System.Windows.Forms;
 using EnvDTE;
@@ -16,7 +17,9 @@ namespace Umbraco.VS.NewProject.Wizard
     {
         private UserInputForm inputForm;
         private DTE _dte;
-
+        private string _projectPath;
+        private string _solutionPath;
+        private string _packagePath;
 
         /// <summary>
         /// Runs custom wizard logic at the beginning of a template wizard run.
@@ -42,12 +45,13 @@ namespace Umbraco.VS.NewProject.Wizard
 
             try
             {
-                var csProj          = project.FileName;
-                var projectPath     = Path.GetDirectoryName(csProj);
-                var solutionPath    = Path.GetDirectoryName(projectPath);
+                var csProj      = project.FileName;
+                _projectPath    = Path.GetDirectoryName(csProj);
+                _solutionPath   = Path.GetDirectoryName(_projectPath);
+                _packagePath    = Path.Combine(_solutionPath, "packages");
 
                 //Go Get Umbraco from Nuget
-                GetUmbraco(solutionPath, project);
+                GetUmbraco(project);
 
                 // Display a form to the user. The form collects 
                 // input for the custom message.
@@ -65,6 +69,7 @@ namespace Umbraco.VS.NewProject.Wizard
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                Debug.WriteLine(ex);
             }
         }
 
@@ -110,18 +115,17 @@ namespace Umbraco.VS.NewProject.Wizard
         }
 
 
-        public void GetUmbraco(string solutionPath, Project project)
+        public void GetUmbraco(Project project)
         {
             //Update IDE status bar bottom left
             _dte.StatusBar.Text = "Umbraco New Project - Getting Umbraco (Please Wait)";
 
             //Debug
             Debug.Write("Umbraco New Project - GetUmbraco() event");
-            Debug.Write("FilePath: " + solutionPath);
+            Debug.Write("Package Path: " + _packagePath);
 
             //Get Packages folder at solution level
-            var packagePath = Path.Combine(solutionPath, "packages");
-
+            var packagePath = _packagePath;
 
             //ID of the package to be looked up
             string packageID = "UmbracoCMS";
@@ -136,16 +140,19 @@ namespace Umbraco.VS.NewProject.Wizard
             var umbracoNuget = packages.SingleOrDefault(x => x.IsLatestVersion && x.IsReleaseVersion());
 
             //Initialize the package manager
-            var packageManager = new PackageManager(repo, solutionPath);
+            var packageManager = new PackageManager(repo, packagePath);
 
             //Hook up Nuget events
             packageManager.PackageInstalled += packageManager_PackageInstalled;
             packageManager.PackageInstalling += packageManager_PackageInstalling;
-
-            //Download and unzip the package/s
-            //Gets all the dependcies needed as well
+            
+            //Check got package - nuget may be down or network error?!
             if (umbracoNuget != null)
             {
+                //Update IDE status bar bottom left
+                _dte.StatusBar.Text = "Umbraco New Project - Installing Nuget Packages";
+
+                //Download and unzip the package/s - Gets all the dependcies needed as well
                 packageManager.InstallPackage(umbracoNuget, false, false);
             }
         }
@@ -175,34 +182,28 @@ namespace Umbraco.VS.NewProject.Wizard
         {
             var package     = e.Package;
             var fileSystem  = e.FileSystem;
-            var installPath = e.InstallPath;
-            var targetPath  = e.TargetPath;
 
-            var packageContentFiles = e.Package.GetContentFiles();
-            var packageFiles        = e.Package.GetFiles();
 
             Debug.WriteLine("Umbraco New Project - PackageInstalled() event");
             Debug.WriteLine(string.Format("Installed {0} {1}", package.Title, package.Version.ToString()));
             Debug.WriteLine(string.Empty);
 
-            /*
-            string localSource = Path.Combine(targetPath, "packages");
 
-            IPackageRepository sourceRepo       =  PackageRepositoryFactory.Default.CreateRepository(new PackageSource("https://packages.nuget.org/api/v2"));
-            IPackagePathResolver pathResolver   = new DefaultPackagePathResolver(localSource);
-            IProjectSystem project;
-            IPackageRepository localRepo        = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(localSource));
+            var packagesDirectory = fileSystem.Root;
 
+            //Variables needed to create a projectManager object
+            string webRepositoryDirectory       = _projectPath;
+            IPackageRepository sourceRepository = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            IPackagePathResolver pathResolver   = new DefaultPackagePathResolver(webRepositoryDirectory);
+            IPackageRepository localRepository  = PackageRepositoryFactory.Default.CreateRepository(packagesDirectory);
+            IProjectSystem project              = new WebProjectSystem(_projectPath);
+            
+            //Create the ProjectManager
+            //Not sure passing correct params in here...
+            ProjectManager projectManager       = new ProjectManager(sourceRepository, pathResolver, project, localRepository);
 
-            //Add nuget into project
-            ProjectManager projectManager = new ProjectManager(sourceRepo, pathResolver, project, localRepo);
-
-            if (projectManager != null)
-            {
-                //Add package to project
-                projectManager.AddPackageReference(package, true, false);  
-            }
-            */
+            //Add package to project
+            projectManager.AddPackageReference(package, true, false); 
         }
     }
 }
