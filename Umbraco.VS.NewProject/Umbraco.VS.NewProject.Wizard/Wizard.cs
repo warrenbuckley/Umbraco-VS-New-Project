@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
-using System.Web.WebPages.Administration.PackageManager;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
 using System.Windows.Forms;
 using EnvDTE;
 using NuGet;
+using NuGet.VisualStudio;
 using Umbraco.Core;
 using umbraco.presentation.install.utills;
+using WebProjectSystem = System.Web.WebPages.Administration.PackageManager.WebProjectSystem;
 
 namespace Umbraco.VS.NewProject.Wizard
 {
@@ -21,6 +25,7 @@ namespace Umbraco.VS.NewProject.Wizard
         private string _projectPath;
         private string _solutionPath;
         private string _packagePath;
+        private ServiceProvider _services;
 
         /// <summary>
         /// Runs custom wizard logic at the beginning of a template wizard run.
@@ -31,8 +36,14 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="customParams">The custom parameters with which to perform parameter replacement in the project.</param>
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
+            //Get the DTE object
             _dte = (DTE)automationObject;
 
+            //Get services
+            _services = new ServiceProvider(automationObject as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+
+           
+            //Debug
             Debug.WriteLine("Umbraco New Project - RunStarted() event");
         }
 
@@ -42,6 +53,7 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="project">The project that finished generating.</param>
         public void ProjectFinishedGenerating(Project project)
         {
+            //Debug
             Debug.WriteLine("Umbraco New Project - ProjectFinishedGenerating() event");
 
             try
@@ -52,6 +64,7 @@ namespace Umbraco.VS.NewProject.Wizard
                 _solutionPath   = Path.GetDirectoryName(_projectPath);
                 _packagePath    = Path.Combine(_solutionPath, "packages");
 
+                
                 //Go Get Umbraco from Nuget
                 GetUmbraco(project);
 
@@ -124,10 +137,6 @@ namespace Umbraco.VS.NewProject.Wizard
 
             //Debug
             Debug.WriteLine("Umbraco New Project - GetUmbraco() event");
-            Debug.WriteLine("Package Path: " + _packagePath);
-
-            //Get Packages folder at solution level
-            var packagePath = _packagePath;
 
             //ID of the package to be looked up
             string packageID = "UmbracoCMS";
@@ -135,110 +144,63 @@ namespace Umbraco.VS.NewProject.Wizard
             //Connect to the official package repository
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 
-            //Get the list of all NuGet packages with ID 'UmbracoCMS'       
-            List<IPackage> packages = repo.FindPackagesById(packageID).ToList();
 
-            //Get the latest Umbraco Nuget but only release (not pre-release, alpha stuff)
-            var umbracoNuget = packages.SingleOrDefault(x => x.IsLatestVersion && x.IsReleaseVersion());
 
-            //Initialize the package manager
-            var packageManager = new PackageManager(repo, packagePath);
+            //Get Component Model
+            //http://docs.nuget.org/docs/reference/extensibility-apis
+            //http://docs.nuget.org/docs/reference/invoking-nuget-services-from-inside-visual-studio
+            //https://nuget.codeplex.com/discussions/246688
+            //var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel));
+            var componentModel = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel)) as IComponentModel;
 
-            //Hook up Nuget events
-            packageManager.PackageInstalled += packageManager_PackageInstalled;
-            packageManager.PackageInstalling += packageManager_PackageInstalling;
-            
-            //Check got package - nuget may be down or network error?!
-            if (umbracoNuget != null)
+            if (componentModel != null)
             {
+                //Get Nuget Extensibilty points
+                var nugetEvents = componentModel.GetService<IVsPackageInstallerEvents>();
+                var installer   = componentModel.GetService<IVsPackageInstaller>();
+                var uninstaller = componentModel.GetService<IVsPackageUninstaller>();
+                var packageMeta = componentModel.GetService<IVsPackageMetadata>();
+                var packageInfo = componentModel.GetService<IVsPackageInstallerServices>();
+
+
                 //Update IDE status bar bottom left
                 _dte.StatusBar.Text = "Umbraco New Project - Installing Nuget Packages";
 
+                //Wire up events
+                nugetEvents.PackageReferenceAdded += nugetEvents_PackageReferenceAdded;
+                nugetEvents.PackageInstalling += nugetEvents_PackageInstalling;
+                nugetEvents.PackageInstalled += nugetEvents_PackageInstalled;
+
                 //Download and unzip the package/s - Gets all the dependcies needed as well
-                packageManager.InstallPackage(umbracoNuget, false, false);
+                installer.InstallPackage(repo, project, packageID, null, false, false);
             }
         }
 
-        /// <summary>
-        /// Package Installing from Nuget event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void packageManager_PackageInstalling(object sender, PackageOperationEventArgs e)
+        void nugetEvents_PackageInstalled(IVsPackageMetadata metadata)
         {
-            var package = e.Package;
-            Debug.WriteLine("Umbraco New Project - PackageInstalling() event");
-            Debug.WriteLine(string.Format("Installing {0} {1}", package.Title, package.Version.ToString()));
-            Debug.WriteLine(string.Empty);
+            //Debug
+            Debug.WriteLine("Umbraco New Project - Nuget PackageInstalled()");
 
             //Update IDE status bar bottom left
-            _dte.StatusBar.Text = string.Format("Installing {0} {1}", package.Title, package.Version.ToString());
+            _dte.StatusBar.Text = string.Format("Installed Nuget {0} {1}", metadata.Title, metadata.VersionString);
         }
 
-        /// <summary>
-        /// Package Installed from Nuget event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void packageManager_PackageInstalled(object sender, PackageOperationEventArgs e)
+        void nugetEvents_PackageInstalling(IVsPackageMetadata metadata)
         {
-            var package     = e.Package;
-            var fileSystem  = e.FileSystem;
+            //Debug
+            Debug.WriteLine("Umbraco New Project - Nuget PackageInstalling()");
 
-
-            Debug.WriteLine("Umbraco New Project - PackageInstalled() event");
-            Debug.WriteLine(string.Format("Installed {0} {1}", package.Title, package.Version.ToString()));
-            Debug.WriteLine(string.Empty);
-
-
-            var packagesDirectory = fileSystem.Root;
-
-            //Variables needed to create a projectManager object
-            IPackageRepository sourceRepository = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-            IPackagePathResolver pathResolver   = new DefaultPackagePathResolver(_solutionPath);
-            IPackageRepository localRepository  = PackageRepositoryFactory.Default.CreateRepository(packagesDirectory);
-            IProjectSystem project              = new WebProjectSystem(_projectPath);
-            
-            //Create the ProjectManager
-            //Not sure passing correct params in here...
-            ProjectManager projectManager       = new ProjectManager(sourceRepository, pathResolver, project, localRepository);
-
-            //Add Package to Project - Wire up Events
-            projectManager.PackageReferenceAdded += projectManager_PackageReferenceAdded;
-            projectManager.PackageReferenceAdding += projectManager_PackageReferenceAdding;
-
-            //Add package to project
-            try
-            {
-                projectManager.AddPackageReference(package, true, false);
-            }
-            catch (Exception)
-            {   
-                throw;
-            }
+            //Update IDE status bar bottom left
+            _dte.StatusBar.Text = string.Format("Installing Nuget {0} {1}", metadata.Title, metadata.VersionString);
         }
 
-        void projectManager_PackageReferenceAdding(object sender, PackageOperationEventArgs e)
+        void nugetEvents_PackageReferenceAdded(IVsPackageMetadata metadata)
         {
-            var package = e.Package;
-            var installPath = e.InstallPath;
-            var fileSystem = e.FileSystem;
-            var targetPath = e.TargetPath;
+            //Debug
+            Debug.WriteLine("Umbraco New Project - Nuget PackageReferenceAdded()");
 
-        }
-
-        /// <summary>
-        /// When a package is being added to the project itself
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void projectManager_PackageReferenceAdded(object sender, PackageOperationEventArgs e)
-        {
-            var package     = e.Package;
-            var installPath = e.InstallPath;
-            var fileSystem  = e.FileSystem;
-            var targetPath  = e.TargetPath;
-
+            //Update IDE status bar bottom left
+            _dte.StatusBar.Text = string.Format("Adding Nuget to Project {0} {1}", metadata.Title, metadata.VersionString);
         }
     }
 }
