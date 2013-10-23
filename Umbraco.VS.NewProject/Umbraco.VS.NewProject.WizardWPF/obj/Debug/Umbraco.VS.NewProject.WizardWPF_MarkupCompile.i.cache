@@ -1,7 +1,7 @@
 ﻿Umbraco.VS.NewProject.WizardWPF
 
 
-winexe
+library
 C#
 .cs
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.WizardWPF\obj\Debug\
@@ -9,11 +9,11 @@ Umbraco.VS.NewProject.WizardWPF
 none
 false
 DEBUG;TRACE
-C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.WizardWPF\App.xaml
+
 11151548125
 
 9-2067809391
-19-86829839
+80-258360944
 MainWindow.xaml;
 
 False

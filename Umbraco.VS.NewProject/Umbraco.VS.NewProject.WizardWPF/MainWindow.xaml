@@ -2,14 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="WizardWindow" x:Class="Umbraco.VS.NewProject.WizardWPF.MainWindow"
-        Title="Umbraco - Add New Project" Height="350" Width="525" WindowStartupLocation="CenterScreen">
+        Title="Umbraco - Add New Project" Height="350" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="Width" Icon="umbraco-logo-large.png">
     <Grid x:Name="MainGrid">
         <StatusBar x:Name="StatusBar" HorizontalAlignment="Left" Height="33" Margin="0,286,0,0" VerticalAlignment="Top" Width="517" Grid.ColumnSpan="2">
-            <StatusBarItem x:Name="TemplateProjectVersion" Content="Version 1.1.3" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <StatusBarItem x:Name="UmbracoVersion" Content="Umbraco NuGet Version: 6.1.6" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <StatusBarItem x:Name="UmbracoVersion" Content="Umbraco NuGet Version: 6.1.6" Height="33" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         </StatusBar>
         <GroupBox Header="Rendering Engine" HorizontalAlignment="Left" Margin="10,53,0,0" VerticalAlignment="Top" Height="70" Width="497">
-            <Grid HorizontalAlignment="Left" Width="485" Margin="10,10,0,0">
+            <Grid HorizontalAlignment="Left" Width="477" Margin="10,10,-2,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
@@ -19,15 +18,16 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Content="Select Rendering Engine:" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top"/>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top">
-                    <ComboBoxItem Content="Mvc (Recommended)" Height="100" Width="100" IsSelected="True"/>
-                    <ComboBoxItem Content="WebForms" Height="100" Width="100"/>
+                <ComboBox x:Name="renderingEngine" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top">
+                    <ComboBoxItem Content="Mvc (Recommended)" IsSelected="True"/>
+                    <ComboBoxItem Content="WebForms"/>
                 </ComboBox>
 
             </Grid>
 
         </GroupBox>
         <Button Content="Create Project" HorizontalAlignment="Left" Margin="10,243,0,0" Padding="5" VerticalAlignment="Top" Click="CreateProjectClick"/>
-        <Label Content="Umbraco Add New Project Wizard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
+        <Label Content="Umbraco Add New Project Wizard" HorizontalAlignment="Left" Margin="52,10,0,0" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
+        <Image HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" VerticalAlignment="Top" Width="37" Stretch="Fill" Source="umbraco-logo-large.png" RenderTransformOrigin="-7.189,0.243"/>
     </Grid>
 </Window>

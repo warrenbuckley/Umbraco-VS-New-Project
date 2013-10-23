@@ -1,4 +1,5 @@
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\Umbraco.VS.NewProject.Wizard.dll
+C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\Umbraco.VS.NewProject.Wizard.WPF.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\extension.vsixmanifest
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\Packages\\UmbracoCms.6.1.6.nupkg
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\Packages\\UmbracoCms.Core.6.1.6.nupkg
@@ -50,8 +51,10 @@ C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\umbraco.XmlSerializers.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\UmbracoExamine.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\UrlRewritingNet.UrlRewriter.dll
+C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Web.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Web.Extensions.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Configuration.dll
+C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Drawing.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Transactions.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Data.Linq.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.ComponentModel.DataAnnotations.dll
@@ -59,4 +62,5 @@ C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Web.DataVisualization.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\System.Runtime.Caching.dll
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\ProjectTemplates\CSharp\\1033\Umbraco.VS.NewProject.zip
+C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\Umbraco.VS.NewProject.Wizard.WPF.pdb
 C:\Users\Warren Buckley\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions\Umbraco Community\Umbraco Community - File New Project\1.1.2\\Umbraco.VS.NewProject.Wizard.pdb
