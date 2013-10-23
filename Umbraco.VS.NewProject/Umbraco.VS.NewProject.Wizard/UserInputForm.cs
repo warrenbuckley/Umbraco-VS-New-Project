@@ -76,66 +76,44 @@ namespace Umbraco.VS.NewProject.Wizard
             var connectionString = txtDBConnection.Text;
 
             //Only do db chekc if not null or empty
-            if (!String.IsNullOrEmpty(connectionString))
-            {
-                SqlConnection dbCon = new SqlConnection();
+            if (!String.IsNullOrEmpty(connectionString)) {
+                using (var dbCon = new SqlConnection()) {
+                    try {
+                        dbCon.ConnectionString = connectionString;
+                        dbCon.Open();
 
-                try
-                {
-                    dbCon.ConnectionString = connectionString;
-                    dbCon.Open();
-
-                    //If valid connection enable main button...
-                    MessageBox.Show("Test Connection Succeeded.", "DB Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    btnCreateProj.Enabled = true;
-                }
-                catch (Exception ex)
-                {
-                    //Otherwise disable the button & show error message
-                    MessageBox.Show("Test Connection Failed - exception: " + ex.Message, "DB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btnCreateProj.Enabled = false;
-                }
-                finally
-                {
-                    try
-                    {
+                        //If valid connection enable main button...
+                        MessageBox.Show("Test Connection Succeeded.", "DB Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        btnCreateProj.Enabled = true;
+                    } catch (Exception ex) {
+                        //Otherwise disable the button & show error message
+                        MessageBox.Show("Test Connection Failed - exception: " + ex.Message, "DB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        btnCreateProj.Enabled = false;
+                    } finally {
                         dbCon.Close();
                     }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
                 }
-            }
-            else
-            {
+            } else {
                 //Otherwise disable the button & show error message
                 MessageBox.Show("Test Connection Failed: Please enter a connection string", "DB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnCreateProj.Enabled = false;
             }
         }
 
-        private void btnCreateProj_Click(object sender, EventArgs e)
-        {
+        private void btnCreateProj_Click(object sender, EventArgs e) {
 
             //Fetch value if MVC or WebForms
-            if (rdoMVC.Checked)
-            {
+            if (rdoMVC.Checked) {
                 //Updates config value...
                 UpdateRenderingEngine(RenderingEngine.Mvc);
-
-            }
-            else if (rdoWebForms.Checked)
-            {
+            } else if (rdoWebForms.Checked) {
                 //Updates config value...
                 UpdateRenderingEngine(RenderingEngine.WebForms);
             }
 
-
             //Fetch DB choice (CE or custom)
             //If CE create CE db file and update web.config connection
-            if (rdoSQLCE.Checked)
-            {
+            if (rdoSQLCE.Checked) {
                 //Create SQL CE DB file on disk
 
                 //Set web.config value
@@ -143,8 +121,7 @@ namespace Umbraco.VS.NewProject.Wizard
                 dbConnectionString  = "Datasource=|DataDirectory|Umbraco.sdf";
                 dbType              = "CE";
 
-                if (Umbraco.Core.ApplicationContext.Current != null)
-                {
+                if (Umbraco.Core.ApplicationContext.Current != null) {
                     //Setup DB config - manual DB connection
                     Umbraco.Core.ApplicationContext.Current.DatabaseContext.ConfigureEmbeddedDatabaseConnection();
 
@@ -152,17 +129,14 @@ namespace Umbraco.VS.NewProject.Wizard
                     Umbraco.Core.ApplicationContext.Current.DatabaseContext.Database.CreateDatabaseSchema();
                 }
 
-            }
-            else if (rdoCustomDB.Checked)
-            {
+            } else if (rdoCustomDB.Checked) {
                 //else custom DB - just update web.config connection
                 //Just use the DB value from the textbox
                 dbConnectionString  = txtDBConnection.Text;
                 dbType              = "Custom";
 
                 //Use Umbraco DB API - to update web.config
-                if (Umbraco.Core.ApplicationContext.Current != null)
-                {
+                if (Umbraco.Core.ApplicationContext.Current != null) {
                     //Setup DB config - manual DB connection
                     Umbraco.Core.ApplicationContext.Current.DatabaseContext.ConfigureDatabaseConnection(dbConnectionString);
 
@@ -171,13 +145,11 @@ namespace Umbraco.VS.NewProject.Wizard
                 }
             }
 
-
             //All done - close form
             this.Dispose();
         }
 
-        private void UpdateRenderingEngine(Umbraco.Core.RenderingEngine engine)
-        {
+        private void UpdateRenderingEngine(Umbraco.Core.RenderingEngine engine) {
             //Local variables
 
             // C:\\inetpub\\wwwroot\\UmbracoWebsite5\\UmbracoWebsite5\\UmbracoWebsite5.csproj
@@ -198,22 +170,17 @@ namespace Umbraco.VS.NewProject.Wizard
             //Load the config file as xml
             var xml = new XmlDocument();
 
-            try
-            {
-                using (XmlReader reader = XmlReader.Create(filePath))
-                {
+            try {
+                using (XmlReader reader = XmlReader.Create(filePath)) {
                     //Load XML
                     xml.Load(reader);
                 }
 
                 //Find the correct node for the 'defaultRenderingEngine' and update the value
-                if (xml.DocumentElement != null)
-                {
+                if (xml.DocumentElement != null) {
                     //Get the defaultRendering engine XML node, so we can update it's value
                     var node = xml.DocumentElement.SelectSingleNode("/settings/templates/defaultRenderingEngine");
-
-                    if (node != null)
-                    {
+                    if (node != null) {
                         //Update the value in the XML
                         node.InnerText = value.ToString();
                     }
@@ -222,9 +189,7 @@ namespace Umbraco.VS.NewProject.Wizard
                 //Save file
                 xml.Save(filePath);
 
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 //Otherwise disable the button & show error message
                 MessageBox.Show("Exception: " + ex.Message, "Update Rendering Engine Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

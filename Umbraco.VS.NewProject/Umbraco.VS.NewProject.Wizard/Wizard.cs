@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TemplateWizard;
+using System.Linq;
 using System.Windows.Forms;
 using EnvDTE;
+using Microsoft.VisualStudio.TemplateWizard;
+using Microsoft.VisualStudio.Shell;
+using NuGet.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
+using NuGet;
 
 namespace Umbraco.VS.NewProject.Wizard
 {
@@ -13,6 +18,9 @@ namespace Umbraco.VS.NewProject.Wizard
         private string templateEnginge;
         private string dbType;
 
+        private IComponentModel serviceHost;
+        private string rootSolutionDirectory;
+
         /// <summary>
         /// Runs custom wizard logic at the beginning of a template wizard run.
         /// </summary>
@@ -22,7 +30,9 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="customParams">The custom parameters with which to perform parameter replacement in the project.</param>
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
-            //MessageBox.Show("RunStarted()");
+            if (serviceHost == null) serviceHost = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+            rootSolutionDirectory = replacementsDictionary["$solutiondirectory$"];
+            MessageBox.Show("RunStarted()");
         }
 
 
@@ -32,7 +42,15 @@ namespace Umbraco.VS.NewProject.Wizard
         /// <param name="project">The project that finished generating.</param>
         public void ProjectFinishedGenerating(EnvDTE.Project project)
         {
-            //MessageBox.Show("ProjectFinishedGenerating()");
+            var factory = serviceHost.GetService<IVsPackageManagerFactory>();
+            var manager = factory.CreatePackageManager();
+            var package = manager.SourceRepository.FindPackage("UmbracoCms");
+
+            manager.InstallPackage(
+                new List<Project>() { project },
+                package,
+                new List<PackageOperation> { new PackageOperation(package, PackageAction.Install) },
+                false, false, NuGet.NullLogger.Instance, null);
 
             try
             {
