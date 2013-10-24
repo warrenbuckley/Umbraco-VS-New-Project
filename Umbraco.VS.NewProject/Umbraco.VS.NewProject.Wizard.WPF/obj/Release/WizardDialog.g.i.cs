@@ -99,7 +99,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Umbraco.VS.NewProject.Wizard.WPF;component/wizarddialog.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Umbraco.VS.NewProject.Wizard;component/wizarddialog.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\WizardDialog.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
