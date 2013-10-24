@@ -120,5 +120,105 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 MessageBox.Show("Exception: " + ex.Message, "Update Rendering Engine Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void databaseTypeChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Get the selected value from the dropdown
+            var dbTypeItem = (databaseType.SelectedValue as ComboBoxItem).Content.ToString();
+
+            if (!string.IsNullOrEmpty(dbTypeItem))
+            {
+               
+                //Enable/disable controls depending on choice
+                switch (dbTypeItem)
+                {
+                    case "SQL CE File based Database (Recommended)":
+                        //Disable datbase details group
+                        databaseDetailsGroup.IsEnabled = false;
+                        break;
+
+                    case "SQL Server":
+                        databaseDetailsGroup.IsEnabled = true;
+                        serverLabel.IsEnabled = true;
+                        server.IsEnabled = true;
+                        databaseNameLabel.IsEnabled = true;
+                        databaseName.IsEnabled = true;
+                        usernameLabel.IsEnabled = true;
+                        username.IsEnabled = true;
+                        passwordLabel.IsEnabled = true;
+                        password.IsEnabled = true;
+                        securityLabel.IsEnabled = true;
+                        security.IsEnabled = true;
+                        connectionLabel.IsEnabled = false;
+                        connection.IsEnabled = false;
+                        testConnectionButton.IsEnabled = true;
+                        break;
+
+                    case "SQL Azure":
+                        databaseDetailsGroup.IsEnabled = true;
+                        serverLabel.IsEnabled = true;
+                        server.IsEnabled = true;
+                        databaseNameLabel.IsEnabled = true;
+                        databaseName.IsEnabled = true;
+                        usernameLabel.IsEnabled = true;
+                        username.IsEnabled = true;
+                        passwordLabel.IsEnabled = true;
+                        password.IsEnabled = true;
+                        securityLabel.IsEnabled = false;
+                        security.IsEnabled = false;
+                        connectionLabel.IsEnabled = false;
+                        connection.IsEnabled = false;
+                        testConnectionButton.IsEnabled = true;
+                        break;
+
+                    case "MySQL":
+                        databaseDetailsGroup.IsEnabled = true;
+                        serverLabel.IsEnabled = true;
+                        server.IsEnabled = true;
+                        databaseNameLabel.IsEnabled = true;
+                        databaseName.IsEnabled = true;
+                        usernameLabel.IsEnabled = true;
+                        username.IsEnabled = true;
+                        passwordLabel.IsEnabled = true;
+                        password.IsEnabled = true;
+                        securityLabel.IsEnabled = false;
+                        security.IsEnabled = false;
+                        connectionLabel.IsEnabled = false;
+                        connection.IsEnabled = false;
+                        testConnectionButton.IsEnabled = true;
+                        break;
+
+                    case "Advanced":
+                        databaseDetailsGroup.IsEnabled = true;
+                        serverLabel.IsEnabled = false;
+                        server.IsEnabled = false;
+                        databaseNameLabel.IsEnabled = false;
+                        databaseName.IsEnabled = false;
+                        usernameLabel.IsEnabled = false;
+                        username.IsEnabled = false;
+                        passwordLabel.IsEnabled = false;
+                        password.IsEnabled = false;
+                        securityLabel.IsEnabled = false;
+                        security.IsEnabled = false;
+                        connectionLabel.IsEnabled = true;
+                        connection.IsEnabled = true;
+                        testConnectionButton.IsEnabled = true;
+                        break;
+
+                    default:
+                        //Disable datbase details group
+                        databaseDetailsGroup.IsEnabled = false;
+                        break;
+
+            }
+
+             
+            }
+        }
+
+        private void UpdateDatabase()
+        {
+            
+        }
     }
 }

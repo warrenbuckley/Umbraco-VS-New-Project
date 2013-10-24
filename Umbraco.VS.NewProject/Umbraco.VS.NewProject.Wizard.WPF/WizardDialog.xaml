@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="500">
+             d:DesignHeight="650" d:DesignWidth="500">
     <Grid>
 
         <Image HorizontalAlignment="Left" Height="42" VerticalAlignment="Top" Width="42" Margin="10,10,0,0" Source="umbraco-logo-large.png"/>
         <Label Content="Umbraco New Project Wizard" HorizontalAlignment="Left" Margin="57,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
         <GroupBox x:Name="engineChoiceGroup" Header="Rendering Engine" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="480" Height="92" FontSize="11">
             <Grid HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="468">
-                <Label Content="Select Rendering Engine:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                <ComboBox x:Name="engineChoice" HorizontalAlignment="Left" Margin="145,14,0,0" VerticalAlignment="Top">
+                <Label Content="Select Engine:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <ComboBox x:Name="engineChoice" HorizontalAlignment="Left" Margin="135,14,0,0" VerticalAlignment="Top" Width="323">
                     <ComboBoxItem IsSelected="True">MVC (Recommended)</ComboBoxItem>
                     <ComboBoxItem>WebForms</ComboBoxItem>
                 </ComboBox>
@@ -20,11 +20,40 @@
 
             </Grid>
         </GroupBox>
-        <Button x:Name="CreateProjectBtn" Content="Update Project" HorizontalAlignment="Left" Margin="10,288,0,0" Padding="5" VerticalAlignment="Top" Click="CreateProjectClick" />
-        <StatusBar x:Name="statusBar" HorizontalAlignment="Left" Height="29" Margin="0,321,0,0" VerticalAlignment="Top" Width="500">
+        <Button x:Name="CreateProjectBtn" Content="Update Project" HorizontalAlignment="Left" Margin="10,575,0,0" Padding="5" VerticalAlignment="Top" Click="CreateProjectClick" />
+        <StatusBar x:Name="statusBar" HorizontalAlignment="Left" Height="29" Margin="0,621,0,0" VerticalAlignment="Top" Width="500">
             <StatusBarItem x:Name="umbracoVersionStatusBar" Content="Umbraco Nuget Version:" Height="29" VerticalAlignment="Top"/>
         </StatusBar>
-        <GroupBox x:Name="databaseGroup" Header="Database" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Width="480" Height="115"/>
+        <GroupBox x:Name="databaseGroup" Header="Database" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Width="480" Height="61">
+            <Grid HorizontalAlignment="Left" Height="51" VerticalAlignment="Top" Width="468" Margin="0,0,0,-12">
+                <Label Content="Select Database:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox x:Name="databaseType" HorizontalAlignment="Left" Margin="135,4,0,0" VerticalAlignment="Top" Width="323" SelectionChanged="databaseTypeChanged">
+                    <ComboBoxItem IsSelected="True">SQL CE File based Database (Recommended)</ComboBoxItem>
+                    <ComboBoxItem>SQL Server</ComboBoxItem>
+                    <ComboBoxItem>SQL Azure</ComboBoxItem>
+                    <ComboBoxItem>MySQL</ComboBoxItem>
+                    <ComboBoxItem>Advanced</ComboBoxItem>
+                </ComboBox>
+
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="databaseDetailsGroup" Header="Database Details" HorizontalAlignment="Left" Margin="10,234,0,0" VerticalAlignment="Top" Width="480" Height="320" IsEnabled="False">
+            <Grid HorizontalAlignment="Left" Height="306" VerticalAlignment="Top" Width="468">
+                <Button x:Name="testConnectionButton" Content="Test Connection" HorizontalAlignment="Left" Margin="360,268,0,0" VerticalAlignment="Top" Padding="5"/>
+                <Label x:Name="serverLabel" Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="databaseNameLabel" Content="Database Name" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="usernameLabel" Content="Username" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="passwordLabel" Content="Password" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="securityLabel" Content="Intergrated Security?" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="connectionLabel" Content="Connection String" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="password" HorizontalAlignment="Left" Height="23" Margin="135,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
+                <TextBox x:Name="username" HorizontalAlignment="Left" Height="23" Margin="135,75,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
+                <TextBox x:Name="databaseName" HorizontalAlignment="Left" Height="23" Margin="135,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
+                <TextBox x:Name="server" HorizontalAlignment="Left" Height="23" Margin="135,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
+                <TextBox x:Name="connection" HorizontalAlignment="Left" Height="70" Margin="135,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
+                <CheckBox x:Name="security" Content="" HorizontalAlignment="Left" Margin="135,140,0,0" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
 
     </Grid>
 </UserControl>

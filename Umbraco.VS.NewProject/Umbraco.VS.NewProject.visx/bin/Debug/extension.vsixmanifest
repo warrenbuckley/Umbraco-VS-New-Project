@@ -16,6 +16,6 @@
   </Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" Path="ProjectTemplates" />
-    <Asset Type="Microsoft.VisualStudio.Assembly" Path="Umbraco.VS.NewProject.Wizard.dll" AssemblyName="Umbraco.VS.NewProject.Wizard, Version=1.1.3.0, Culture=neutral, PublicKeyToken=null" />
+    <Asset Type="Microsoft.VisualStudio.Assembly" Path="Umbraco.VS.NewProject.Wizard.WPF.dll" AssemblyName="Umbraco.VS.NewProject.Wizard.WPF, Version=1.1.3.0, Culture=neutral, PublicKeyToken=null" />
   </Assets>
 </PackageManifest>

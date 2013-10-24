@@ -159,13 +159,15 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             //ID of the package to be looked up
             string packageID = "UmbracoCMS";
 
+
             //Connect to the official package repository
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            IPackageRepository onlineRepo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 
             //Get the list of all NuGet packages with ID 'UmbracoCMS' then get latest 'stable' version (6.1.6)
-            var umbracoPackages = repo.FindPackagesById(packageID).ToList();
+            var umbracoPackages = onlineRepo.FindPackagesById(packageID).ToList();
             var umbraco         = umbracoPackages.FirstOrDefault(x => x.IsLatestVersion && x.IsReleaseVersion());
             _packageVersion     = umbraco.Version.ToString();
+
 
             //Check serviceHost is not null otherwise NuGet extension points will be able to be fetched
             if (_serviceHost != null)
@@ -187,8 +189,33 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 nugetEvents.PackageInstalled        += nugetEvents_PackageInstalled;
                 nugetEvents.PackageReferenceAdded   += nugetEvents_PackageReferenceAdded;
 
-                //Download and unzip the package/s - Gets all the dependcies needed as well
-                installer.InstallPackage(repo, project, packageID, _packageVersion, false, false);
+
+                //Get local %LocalAppData% folder - C:\Users\Warren Buckley\AppData\Local
+                var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+                //Get the NuGet Local Cache Folder - C:\Users\Warren Buckley\AppData\Local\Nuget\Cache
+                var nugetCacheFolder = Path.Combine(appDataFolder, "NuGet\\Cache");
+
+                //Connect to a local package repo
+                IPackageRepository localRepo = PackageRepositoryFactory.Default.CreateRepository(nugetCacheFolder);
+
+                //Try and find Umbraco Package with specific version from live repo in our local repo cache
+                //If we have it in our local cache most likely to have all other depenadcies in local repo cache too
+                var findLocalUmbraco = localRepo.FindPackagesById(packageID).SingleOrDefault(x => x.Version.ToString() == _packageVersion);
+
+                //If we found the package in local cache - lets install from local cache repo
+                if (findLocalUmbraco != null && localRepo != null)
+                {
+                    //Download and unzip the package/s - Gets all the dependcies needed as well
+                    installer.InstallPackage(localRepo, project, packageID, _packageVersion, false, false);
+                }
+                else
+                {
+                    //Use Online Repo to install packages - will be slower as got to fetch them over thew wire
+
+                    //Download and unzip the package/s - Gets all the dependcies needed as well
+                    installer.InstallPackage(onlineRepo, project, packageID, _packageVersion, false, false);
+                }
             }
         }
         
