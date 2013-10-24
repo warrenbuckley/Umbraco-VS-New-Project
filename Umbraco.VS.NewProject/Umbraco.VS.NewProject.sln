@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.VS.NewProject", "Um
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.VS.NewProject.Package", "Umbraco.VS.NewProject.visx\Umbraco.VS.NewProject.Package.csproj", "{37E8EC9A-8ED0-4046-8A23-5F700A93AA80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.VS.NewProject.Wizard", "Umbraco.VS.NewProject.Wizard\Umbraco.VS.NewProject.Wizard.csproj", "{67443567-DF5D-494F-8CB2-368F8B1E8D46}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.VS.NewProject.Wizard.WPF", "Umbraco.VS.NewProject.Wizard.WPF\Umbraco.VS.NewProject.Wizard.WPF.csproj", "{96989C80-7FD0-4529-ACA1-7FBD5D66E8FF}"
 EndProject
 Global
@@ -23,10 +21,6 @@ Global
 		{37E8EC9A-8ED0-4046-8A23-5F700A93AA80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37E8EC9A-8ED0-4046-8A23-5F700A93AA80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37E8EC9A-8ED0-4046-8A23-5F700A93AA80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67443567-DF5D-494F-8CB2-368F8B1E8D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67443567-DF5D-494F-8CB2-368F8B1E8D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67443567-DF5D-494F-8CB2-368F8B1E8D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67443567-DF5D-494F-8CB2-368F8B1E8D46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96989C80-7FD0-4529-ACA1-7FBD5D66E8FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96989C80-7FD0-4529-ACA1-7FBD5D66E8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96989C80-7FD0-4529-ACA1-7FBD5D66E8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -6,23 +6,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="500">
     <Grid>
-        <Image HorizontalAlignment="Left" Height="42" VerticalAlignment="Top" Width="42" Margin="10,10,0,0" Source="pack://siteoforigin:,,,/umbraco-logo-large.png"/>
+
+        <Image HorizontalAlignment="Left" Height="42" VerticalAlignment="Top" Width="42" Margin="10,10,0,0" Source="umbraco-logo-large.png"/>
         <Label Content="Umbraco New Project Wizard" HorizontalAlignment="Left" Margin="57,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
-        <GroupBox x:Name="engineChoiceGroup" Header="Rendering Engine" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="480" Height="108" FontSize="11">
+        <GroupBox x:Name="engineChoiceGroup" Header="Rendering Engine" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="480" Height="92" FontSize="11">
             <Grid HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="468">
                 <Label Content="Select Rendering Engine:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                <ComboBox HorizontalAlignment="Left" Margin="145,14,0,0" VerticalAlignment="Top">
-                    <ComboBoxItem Content="MVC (Recommended)" IsSelected="True"/>
-                    <ComboBoxItem Content="WebForms"/>
+                <ComboBox x:Name="engineChoice" HorizontalAlignment="Left" Margin="145,14,0,0" VerticalAlignment="Top">
+                    <ComboBoxItem IsSelected="True">MVC (Recommended)</ComboBoxItem>
+                    <ComboBoxItem>WebForms</ComboBoxItem>
                 </ComboBox>
                 <Label Content="The rendering engine allows you to decide how you will work with your Umbraco project" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" FontSize="10"/>
 
             </Grid>
         </GroupBox>
-        <Button x:Name="CreateProjectBtn" Content="Create Project" HorizontalAlignment="Left" Margin="10,202,0,0" Padding="5" VerticalAlignment="Top" Click="CreateProjectClick" />
+        <Button x:Name="CreateProjectBtn" Content="Update Project" HorizontalAlignment="Left" Margin="10,288,0,0" Padding="5" VerticalAlignment="Top" Click="CreateProjectClick" />
         <StatusBar x:Name="statusBar" HorizontalAlignment="Left" Height="29" Margin="0,321,0,0" VerticalAlignment="Top" Width="500">
-            <StatusBarItem x:Name="umbracoVersion" Content="Umbraco Nuget Version: 6.X.Y" Height="29" VerticalAlignment="Top"/>
+            <StatusBarItem x:Name="umbracoVersionStatusBar" Content="Umbraco Nuget Version:" Height="29" VerticalAlignment="Top"/>
         </StatusBar>
+        <GroupBox x:Name="databaseGroup" Header="Database" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Width="480" Height="115"/>
 
     </Grid>
 </UserControl>

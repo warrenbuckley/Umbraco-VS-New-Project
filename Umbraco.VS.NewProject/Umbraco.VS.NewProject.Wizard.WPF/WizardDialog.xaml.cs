@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using Umbraco.Core;
 using Path = System.IO.Path;
 
 namespace Umbraco.VS.NewProject.Wizard.WPF
@@ -22,11 +23,17 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
     /// </summary>
     public partial class WizardDialog : UserControl
     {
-        private string _csProjPath;
-        public string CSProjPath
+        private string _umbracoSitePath;
+        public string umbracoSitePath
         {
-            get { return _csProjPath; }
-            set { _csProjPath = value; }
+            get { return _umbracoSitePath; }
+            set { _umbracoSitePath = value; }
+        }
+
+        public string umbracoVersion
+        {
+            get { return umbracoVersionStatusBar.Content.ToString(); }
+            set { umbracoVersionStatusBar.Content = string.Format("Umbraco Nuget Version: {0}", value); }
         }
 
         public WizardDialog()
@@ -37,22 +44,41 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         private void CreateProjectClick(object sender, RoutedEventArgs e)
         {
             //Get the selected value from the dropdown
+            var selectedEngine = (engineChoice.SelectedValue as ComboBoxItem).Content.ToString();
 
-            MessageBox.Show("Hello");
+            //Set rendeing mode dependant on choice
+            switch (selectedEngine)
+            {
+                case "MVC (Recommended)":
+                    //Updates config value...
+                    UpdateRenderingEngine(RenderingEngine.Mvc);
+                    break;
+
+                case "WebForms":
+                    //Updates config value...
+                    UpdateRenderingEngine(RenderingEngine.WebForms);
+                    break;
+
+                default:
+                    //Updates config value...
+                    UpdateRenderingEngine(RenderingEngine.Mvc);
+                    break;
+            }
+
+            //Need to figure a way to close dialog from usercontrol
+            Window parentWindow = Window.GetWindow(this);
+            parentWindow.Close();
         }
 
-        private void UpdateRenderingEngine(Umbraco.Core.RenderingEngine engine)
+        private void UpdateRenderingEngine(RenderingEngine engine)
         {
             //Local variables
 
-            // C:\\inetpub\\wwwroot\\UmbracoWebsite5\\UmbracoWebsite5\\UmbracoWebsite5.csproj
-            var pathToCSProj = CSProjPath;
-
-            // C:\\inetpub\\wwwroot\\UmbracoWebsite5\\UmbracoWebsite5\\
-            var rootFolder = pathToCSProj.Replace(System.IO.Path.GetFileName(pathToCSProj), string.Empty);
+            // C:\\inetpub\\wwwroot\\UmbracoWebsite5\\UmbracoWebsite5
+            var rootFolder = umbracoSitePath;
 
             // C:\\inetpub\\wwwroot\\UmbracoWebsite5\\UmbracoWebsite5\\config\
-            var path = rootFolder + "config" + Path.DirectorySeparatorChar;
+            var path = rootFolder + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar;
 
             // C:\\inetpub\\wwwroot\\UmbracoWebsite5\\UmbracoWebsite5\\config\umbracoSettings.config
             var filePath = path + "umbracoSettings.config";

@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Dynamic;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using EnvDTE;
 using Microsoft.VisualStudio.TemplateWizard;
 using NuGet;
 using NuGet.VisualStudio;
 using Window = System.Windows.Window;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace Umbraco.VS.NewProject.Wizard.WPF
 {
-
-    //TODO: Add in missing references to this project
-
     public class Wizard : IWizard
     {
         private DTE _dte;
@@ -26,7 +22,11 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         private string _projectPath;
         private string _solutionPath;
         private string _packagePath;
-        private ServiceProvider _services;
+        private string _solutionFolder;
+        private string _nugetPackageFolder;
+        private string _destinationFolder;
+        private string _packageVersion;
+        private IComponentModel _serviceHost;
 
         /// <summary>
         /// Runs custom wizard logic at the beginning of a template wizard run.
@@ -40,8 +40,21 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             //Get the DTE object
             _dte = (DTE)automationObject;
 
-            //Get services
-            _services = new ServiceProvider(automationObject as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+            //Get service host
+            if (_serviceHost == null)
+            {
+                _serviceHost = (IComponentModel)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel));
+            }
+
+            //Root Solution Folder - C:\\inetpub\\wwwroot\\UmbracoWebsite2
+            _solutionFolder = replacementsDictionary["$solutiondirectory$"];
+
+            //Nuget Packages Folder - ..\\packages\\
+            _nugetPackageFolder = replacementsDictionary["$nugetpackagesfolder$"];
+
+            //Destination Folder - C:\\inetpub\\wwwroot\\UmbracoWebsite2\\UmbracoWebsite2
+            _destinationFolder = replacementsDictionary["$destinationdirectory$"];
+	
 
             //Debug
             Debug.WriteLine("Umbraco New Project - RunStarted() event");
@@ -68,15 +81,19 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 //Go Get Umbraco from Nuget
                 GetUmbraco(project);
 
+                //Wizard Dialog (WPF Usercontrol)
+                var wizard              = new WizardDialog();
+                wizard.umbracoSitePath  = _destinationFolder;
+                wizard.umbracoVersion   = _packageVersion;
+
                 //Create a WPF Window
                 //Add our WPF UserControl to the window
                 Window myWindow = new Window
                 {
                     Title                   = "Create New Umbraco Project Wizard",
-                    Content                 = new WizardDialog(),
+                    Content                 = wizard,
                     SizeToContent           = SizeToContent.WidthAndHeight,
                     ResizeMode              = ResizeMode.NoResize,
-                    AllowsTransparency      = true,
                     WindowStartupLocation   = WindowStartupLocation.CenterScreen
                 };
 
@@ -145,35 +162,62 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             //Connect to the official package repository
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
 
-            //Get Component Model
-            //http://docs.nuget.org/docs/reference/extensibility-apis
-            //http://docs.nuget.org/docs/reference/invoking-nuget-services-from-inside-visual-studio
-            //https://nuget.codeplex.com/discussions/246688
-            //var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel));
-            
-            var componentModel = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel)) as IComponentModel;
+            //Get the list of all NuGet packages with ID 'UmbracoCMS' then get latest 'stable' version (6.1.6)
+            var umbracoPackages = repo.FindPackagesById(packageID).ToList();
+            var umbraco         = umbracoPackages.FirstOrDefault(x => x.IsLatestVersion && x.IsReleaseVersion());
+            _packageVersion     = umbraco.Version.ToString();
 
-            if (componentModel != null)
+            //Check serviceHost is not null otherwise NuGet extension points will be able to be fetched
+            if (_serviceHost != null)
             {
                 //Get Nuget Extensibilty points
-                var nugetEvents = componentModel.GetService<IVsPackageInstallerEvents>();
-                var installer   = componentModel.GetService<IVsPackageInstaller>();
-                var uninstaller = componentModel.GetService<IVsPackageUninstaller>();
-                var packageMeta = componentModel.GetService<IVsPackageMetadata>();
-                var packageInfo = componentModel.GetService<IVsPackageInstallerServices>();
+                var nugetEvents = _serviceHost.GetService<IVsPackageInstallerEvents>();
+                var installer   = _serviceHost.GetService<IVsPackageInstaller>();
+                var uninstaller = _serviceHost.GetService<IVsPackageUninstaller>();
+                var packageInfo = _serviceHost.GetService<IVsPackageInstallerServices>();
 
+                //Debug
+                Debug.WriteLine("Umbraco New Project - Installing Nuget Packages");
 
                 //Update IDE status bar bottom left
                 _dte.StatusBar.Text = "Umbraco New Project - Installing Nuget Packages";
 
                 //Wire up events
-                nugetEvents.PackageReferenceAdded   += nugetEvents_PackageReferenceAdded;
                 nugetEvents.PackageInstalling       += nugetEvents_PackageInstalling;
                 nugetEvents.PackageInstalled        += nugetEvents_PackageInstalled;
+                nugetEvents.PackageReferenceAdded   += nugetEvents_PackageReferenceAdded;
 
                 //Download and unzip the package/s - Gets all the dependcies needed as well
-                installer.InstallPackage(repo, project, packageID, null, false, false);
+                installer.InstallPackage(repo, project, packageID, _packageVersion, false, false);
             }
+        }
+        
+
+        private void nugetEvents_PackageInstalling(IVsPackageMetadata metadata)
+        {
+            //Debug
+            Debug.WriteLine(string.Format("Umbraco New Project - PackageInstalling() event {0} {1}", metadata.Title, metadata.VersionString));
+
+            //Update IDE status bar bottom left
+            _dte.StatusBar.Text = string.Format("Umbraco New Project - Installing Nuget Package {0} {1}", metadata.Title, metadata.VersionString);
+        }
+
+        private void nugetEvents_PackageInstalled(IVsPackageMetadata metadata)
+        {
+            //Debug
+            Debug.WriteLine(string.Format("Umbraco New Project - PackageInstalled() event {0} {1}", metadata.Title, metadata.VersionString));
+
+            //Update IDE status bar bottom left
+            _dte.StatusBar.Text = string.Format("Umbraco New Project - Installed Nuget Package {0} {1}", metadata.Title, metadata.VersionString);
+        }
+
+        private void nugetEvents_PackageReferenceAdded(IVsPackageMetadata metadata)
+        {
+            //Debug
+            Debug.WriteLine(string.Format("Umbraco New Project - PackageReferencedAdded() event {0} {1}", metadata.Title, metadata.VersionString));
+
+            //Update IDE status bar bottom left
+            _dte.StatusBar.Text = string.Format("Umbraco New Project - Adding Nuget Package Reference {0} {1}", metadata.Title, metadata.VersionString);
         }
     }
 }
