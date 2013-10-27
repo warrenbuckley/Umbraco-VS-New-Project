@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Umbraco.VS.NewProject.Package..bce59885-b7d0-4e94-9fdb-d2665d2d021c" Version="1.1.3" Language="en-US" Publisher="Umbraco Community" />
+    <Identity Id="Umbraco.VS.NewProject.Package..bce59885-b7d0-4e94-9fdb-d2665d2d021c" Version="1.1.4" Language="en-US" Publisher="Umbraco Community" />
     <DisplayName>Umbraco Community - File New Project</DisplayName>
     <Description xml:space="preserve">This installs a File, New Project template that allows you to easily create a new Umbraco project and fetches the latest version from NuGet</Description>
     <Icon>umbraco-logo-large.png</Icon>
-    <Tags>Umbraco</Tags>
+    <Tags>Umbraco, NuGet, Project Template</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0, 12.0]" />

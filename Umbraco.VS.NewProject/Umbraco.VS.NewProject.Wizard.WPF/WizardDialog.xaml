@@ -51,7 +51,7 @@
                 <TextBox x:Name="databaseName" HorizontalAlignment="Left" Height="23" Margin="135,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
                 <TextBox x:Name="server" HorizontalAlignment="Left" Height="23" Margin="135,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
                 <TextBox x:Name="connection" HorizontalAlignment="Left" Height="70" Margin="135,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323"/>
-                <CheckBox x:Name="security" Content="" HorizontalAlignment="Left" Margin="135,140,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="security" Content="" HorizontalAlignment="Left" Margin="135,140,0,0" VerticalAlignment="Top" Click="intergratedSecurityClick" ClickMode="Hover"/>
             </Grid>
         </GroupBox>
 

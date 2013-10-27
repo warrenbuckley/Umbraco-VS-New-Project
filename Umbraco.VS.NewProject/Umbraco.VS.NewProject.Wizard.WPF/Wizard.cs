@@ -211,7 +211,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 }
                 else
                 {
-                    //Use Online Repo to install packages - will be slower as got to fetch them over thew wire
+                    //Use Online Repo to install packages - will be slower as got to fetch them over the wire
 
                     //Download and unzip the package/s - Gets all the dependcies needed as well
                     installer.InstallPackage(onlineRepo, project, packageID, _packageVersion, false, false);
