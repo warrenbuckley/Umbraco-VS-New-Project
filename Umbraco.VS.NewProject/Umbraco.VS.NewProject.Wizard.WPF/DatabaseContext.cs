@@ -223,14 +223,16 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             var connectionstrings = xml.Root.Descendants("connectionStrings").Single();
 
             //Check if attribute on <connectionStrings configSource="/config/connectionStrings.config">
-            var configSource = connectionstrings.Attribute("configSource").Value;
+            var configSource = connectionstrings.Attribute("configSource");
 
             //If we find it - load in config file from configSource attrbiute
-            if (!string.IsNullOrEmpty(configSource))
+            if (configSource != null)
             {
+                //Get the value from the attribute as it exists
+                var configSourcePath = configSource.Value;
 
                 //Path to web.config
-                var dbConfig = Path.Combine(umbracoSitePath, configSource);
+                var dbConfig = Path.Combine(umbracoSitePath, configSourcePath);
 
                 //Open web.config
                 var dbXML = XDocument.Load(dbConfig, LoadOptions.PreserveWhitespace);

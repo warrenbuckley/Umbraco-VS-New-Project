@@ -82,6 +82,6 @@ C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\Umbraco.VS.NewProject.Wizard.WPF.g.resources
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\Umbraco.VS.NewProject.Wizard.WPF.dll
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\Umbraco.VS.NewProject.Wizard.WPF.pdb
-C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\Umbraco.VS.NewProject.Wizard.WPF.csprojResolveAssemblyReference.cache
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\VersionPickerDialog.baml
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\VersionPickerDialog.g.cs
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\Umbraco.VS.NewProject.Wizard.WPF.csprojResolveAssemblyReference.cache

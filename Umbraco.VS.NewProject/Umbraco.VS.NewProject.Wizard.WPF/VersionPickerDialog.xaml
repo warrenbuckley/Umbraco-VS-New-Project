@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="230" d:DesignWidth="500"><Grid>
+             d:DesignHeight="220" d:DesignWidth="500">
+    <Grid Height="220" Width="500">
         <Label Content="Umbraco New Project Wizard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
         <GroupBox Header="Umbraco Version" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" Height="102" Width="480">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="468" Margin="0,0,0,-3">

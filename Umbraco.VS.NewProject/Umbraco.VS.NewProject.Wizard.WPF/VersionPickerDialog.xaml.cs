@@ -20,7 +20,10 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
     /// </summary>
     public partial class VersionPickerDialog : UserControl
     {
-        public string selectedVersion { get; set; }
+        public string selectedVersion
+        {
+            get { return (versionList.SelectedValue as ComboBoxItem).Content.ToString(); }
+        }
 
         public VersionPickerDialog()
         {
@@ -29,10 +32,6 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
         private void getUmbracoButtonClick(object sender, RoutedEventArgs e)
         {
-            //Set the value from dropdown into selectedVersion variable
-            var chosenVersion   = (versionList.SelectedValue as ComboBoxItem).Content.ToString();
-            selectedVersion     = chosenVersion;
-
             //Close dialog
             Window parentWindow = Window.GetWindow(this);
             parentWindow.Close();
