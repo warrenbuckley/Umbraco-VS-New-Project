@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Umbraco.VS.NewProject.Wizard.WPF.VersionPickerDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="230" d:DesignWidth="500"><Grid>
+        <Label Content="Umbraco New Project Wizard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
+        <GroupBox Header="Umbraco Version" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" Height="102" Width="480">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="468" Margin="0,0,0,-3">
+                <Label Content="Select Umbraco Version" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <ComboBox x:Name="versionList" HorizontalAlignment="Left" Margin="151,14,0,0" VerticalAlignment="Top">
+                    <ComboBoxItem Content="6.1.6" IsSelected="True"/>
+                    <ComboBoxItem Content="7.0.0-beta"/>
+                </ComboBox>
+                <Label Content="Choose which version of Umbraco you wish to install from NuGet.org" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" FontSize="10"/>
+            </Grid>
+        </GroupBox>
+        <Button x:Name="getUmbracoButton" Content="Get Umbraco" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Padding="5" Click="getUmbracoButtonClick"/>
+    </Grid>
+</UserControl>

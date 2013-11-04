@@ -222,6 +222,48 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             //Get First XML element <connectionStrings>
             var connectionstrings = xml.Root.Descendants("connectionStrings").Single();
 
+            //Check if attribute on <connectionStrings configSource="/config/connectionStrings.config">
+            var configSource = connectionstrings.Attribute("configSource").Value;
+
+            //If we find it - load in config file from configSource attrbiute
+            if (!string.IsNullOrEmpty(configSource))
+            {
+
+                //Path to web.config
+                var dbConfig = Path.Combine(umbracoSitePath, configSource);
+
+                //Open web.config
+                var dbXML = XDocument.Load(dbConfig, LoadOptions.PreserveWhitespace);
+
+                //Get First XML element <connectionStrings>
+                var connectionstringsConfig = dbXML.Root;
+
+                // Update connectionString if it exists, or else create a new connection string
+                var settingConfig = connectionstringsConfig.Descendants("add").FirstOrDefault(s => s.Attribute("name").Value == "umbracoDbDSN");
+
+
+                //Not found a connection string XML element - lets add it
+                if (settingConfig == null)
+                {
+                    //Add an XML element into <connectionStrings>
+                    //<add name="connectionName" connectionString="connectionString" providerName="providerName" />
+                    connectionstringsConfig.Add(new XElement("add", new XAttribute("name", "umbracoDbDSN"), new XAttribute("connectionString", connString), new XAttribute("providerName", provider)));
+                }
+                else
+                {
+                    //Update the existing attribute values on the <add /> XML elements
+                    settingConfig.Attribute("connectionString").Value = connString;
+                    settingConfig.Attribute("providerName").Value = provider;
+                }
+
+                //Save file
+                dbXML.Save(dbConfig);
+
+                //Finished up
+                return;
+            }
+            
+
             // Update connectionString if it exists, or else create a new connection string
             var setting = connectionstrings.Descendants("add").FirstOrDefault(s => s.Attribute("name").Value == "umbracoDbDSN");
 
