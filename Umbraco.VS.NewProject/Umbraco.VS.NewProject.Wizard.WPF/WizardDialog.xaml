@@ -6,9 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="500">
     <Grid>
-
-        <Image HorizontalAlignment="Left" Height="42" VerticalAlignment="Top" Width="42" Margin="10,10,0,0" Source="umbraco-logo-large.png"/>
-        <Label Content="Umbraco New Project Wizard" HorizontalAlignment="Left" Margin="57,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
+        <Label Content="Umbraco New Project Wizard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
         <GroupBox x:Name="engineChoiceGroup" Header="Rendering Engine" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="480" Height="92" FontSize="11">
             <Grid HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="468">
                 <Label Content="Select Engine:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
