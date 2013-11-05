@@ -39,7 +39,7 @@
         </GroupBox>
         <GroupBox x:Name="databaseDetailsGroup" Header="Database Details" HorizontalAlignment="Left" Margin="10,234,0,0" VerticalAlignment="Top" Width="480" Height="320" IsEnabled="False">
             <Grid HorizontalAlignment="Left" Height="306" VerticalAlignment="Top" Width="468">
-                <Button x:Name="testConnectionButton" Content="Test Connection" HorizontalAlignment="Left" Margin="360,268,0,0" VerticalAlignment="Top" Padding="5"/>
+                <Button x:Name="testConnectionButton" Content="Test Connection" HorizontalAlignment="Left" Margin="360,268,0,0" VerticalAlignment="Top" Padding="5" Click="testConnectionButtonClick"/>
                 <Label x:Name="serverLabel" Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="databaseNameLabel" Content="Database Name" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="usernameLabel" Content="Username" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>

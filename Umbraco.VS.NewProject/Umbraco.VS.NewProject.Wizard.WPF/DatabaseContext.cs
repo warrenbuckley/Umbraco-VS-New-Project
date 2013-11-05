@@ -90,6 +90,38 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         }
 
 
+        public static string GetDatabaseConnection(string server, string databaseName, string user, string password, DatabaseType databaseProvider)
+        {
+            var connectionString    = string.Empty;
+            var providerName        = "System.Data.SqlClient";
+
+            //If provider is MySql
+            if (DatabaseType.MySQL == databaseProvider)
+            {
+                providerName = "MySql.Data.MySqlClient";
+                connectionString = string.Format("Server={0}; Database={1};Uid={2};Pwd={3}", server, databaseName, user, password);
+            }
+
+            //If provider is Azure
+            else if (DatabaseType.Azure == databaseProvider)
+            {
+                connectionString = BuildAzureConnectionString(server, databaseName, user, password);
+            }
+
+            //SQL
+            else if (DatabaseType.SQL == databaseProvider)
+            {
+                connectionString = string.Format("server={0};database={1};user id={2};password={3}", server, databaseName, user, password);
+            }
+
+            return connectionString;
+        }
+
+        public static string GetIntegratedSecurityDatabaseConnection(string server, string databaseName)
+        {
+            return String.Format("Server={0};Database={1};Integrated Security=true", server, databaseName);
+        }
+
         /// <summary>
         /// Configures a ConnectionString for the Umbraco database based on the passed in properties from the installer.
         /// </summary>
@@ -100,6 +132,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         /// <param name="databaseProvider">Type of the provider to be used (Sql, Azure, MySql)</param>
         public void ConfigureDatabaseConnection(string server, string databaseName, string user, string password, DatabaseType databaseProvider)
         {
+
             connectionString    = string.Empty;
             providerName        = "System.Data.SqlClient";
 
@@ -125,7 +158,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             SaveConnectionString(connectionString, providerName);
         }
 
-        internal string BuildAzureConnectionString(string server, string databaseName, string user, string password)
+        public static string BuildAzureConnectionString(string server, string databaseName, string user, string password)
         {
             if (server.Contains(".") && ServerStartsWithTcp(server) == false)
             {

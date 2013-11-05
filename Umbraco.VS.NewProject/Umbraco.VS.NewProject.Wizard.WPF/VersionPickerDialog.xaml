@@ -12,7 +12,7 @@
                 <Label Content="Select Umbraco Version" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <ComboBox x:Name="versionList" HorizontalAlignment="Left" Margin="151,14,0,0" VerticalAlignment="Top">
                     <ComboBoxItem Content="6.1.6" IsSelected="True"/>
-                    <ComboBoxItem Content="7.0.0-beta"/>
+                    <ComboBoxItem Content="7.0.0-RC"/>
                 </ComboBox>
                 <Label Content="Choose which version of Umbraco you wish to install from NuGet.org" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" FontSize="10"/>
             </Grid>

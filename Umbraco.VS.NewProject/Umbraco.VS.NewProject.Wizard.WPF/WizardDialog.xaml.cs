@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Xml;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
+using Umbraco.Core.Persistence.SqlSyntax;
 using Path = System.IO.Path;
 
 namespace Umbraco.VS.NewProject.Wizard.WPF
@@ -188,7 +189,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     {
                         case "SQL CE File based Database (Recommended)":
                             //Disable datbase details group
-                            databaseDetailsGroup.IsEnabled = false;
+                            databaseDetailsGroup.IsEnabled  = false;
+                            CreateProjectBtn.IsEnabled      = true;
                             break;
 
                         case "SQL Server":
@@ -206,6 +208,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                             connectionLabel.IsEnabled       = false;
                             connection.IsEnabled            = false;
                             testConnectionButton.IsEnabled  = true;
+                            CreateProjectBtn.IsEnabled      = false;
                             break;
 
                         case "SQL Azure":
@@ -223,6 +226,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                             connectionLabel.IsEnabled       = false;
                             connection.IsEnabled            = false;
                             testConnectionButton.IsEnabled  = true;
+                            CreateProjectBtn.IsEnabled      = false;
                             break;
 
                         case "MySQL":
@@ -240,6 +244,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                             connectionLabel.IsEnabled       = false;
                             connection.IsEnabled            = false;
                             testConnectionButton.IsEnabled  = true;
+                            CreateProjectBtn.IsEnabled      = false;
                             break;
 
                         case "Advanced":
@@ -257,11 +262,13 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                             connectionLabel.IsEnabled       = true;
                             connection.IsEnabled            = true;
                             testConnectionButton.IsEnabled  = true;
+                            CreateProjectBtn.IsEnabled      = false;
                             break;
 
                         default:
                             //Disable datbase details group
-                            databaseDetailsGroup.IsEnabled = false;
+                            databaseDetailsGroup.IsEnabled  = false;
+                            CreateProjectBtn.IsEnabled      = true;
                             break;
                     }
                 }
@@ -320,20 +327,117 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             if (security.IsChecked == true)
             {
                 usernameLabel.IsEnabled = false;
-                username.IsEnabled = false;
+                username.IsEnabled      = false;
                 passwordLabel.IsEnabled = false;
-                password.IsEnabled = false;
+                password.IsEnabled      = false;
 
             }
             else if (security.IsChecked == false)
             {
                 usernameLabel.IsEnabled = true;
-                username.IsEnabled = true;
+                username.IsEnabled      = true;
                 passwordLabel.IsEnabled = true;
-                password.IsEnabled = true;
+                password.IsEnabled      = true;
             }
         }
 
-        
+        private void testConnectionButtonClick(object sender, RoutedEventArgs e)
+        {
+            //Get Connection String & Provider Name
+            var connectionString    = string.Empty;
+            var providerName        = string.Empty;
+
+            //Get the selected DB value from the dropdown
+            if ((databaseType.SelectedValue as ComboBoxItem).Content != null)
+            {
+                var dbTypeItem = (databaseType.SelectedValue as ComboBoxItem).Content.ToString();
+
+                var dbName      = databaseName.Text;
+                var dbServer    = server.Text;
+                var dbUser      = username.Text;
+                var dbPass      = password.Text;
+                var conn        = string.Empty;
+
+                //If dbName or dbServer empty show messagebox & return
+                if (string.IsNullOrEmpty(dbName) || string.IsNullOrEmpty(dbServer))
+                {
+                    MessageBox.Show("Please provide a Database Name and/or Database Server", "Database Connection Test", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                switch (dbTypeItem)
+                {
+                    case "SQL Server":
+                        if (security.IsChecked == true)
+                        {
+                            //Intergrated security SQL connection
+                            conn = DatabaseContext.GetIntegratedSecurityDatabaseConnection(dbServer, dbName);
+                            TestDB(DatabaseType.SQL, conn, "System.Data.SqlClient");
+                            break;
+                        }
+                        //Normal SQL connection
+                        conn = DatabaseContext.GetDatabaseConnection(dbServer, dbName, dbUser, dbPass, DatabaseContext.DatabaseType.SQL);
+                        TestDB(DatabaseType.SQL, conn, "System.Data.SqlClient");
+                        break;
+
+                    case "SQL Azure":
+                        conn = DatabaseContext.GetDatabaseConnection(dbServer, dbName, dbUser, dbPass, DatabaseContext.DatabaseType.Azure);
+                        TestDB(DatabaseType.Azure, conn, "System.Data.SqlClient");
+                        break;
+
+                    case "MySQL":
+                        conn = DatabaseContext.GetDatabaseConnection(dbServer, dbName, dbUser, dbPass, DatabaseContext.DatabaseType.MySQL);
+                        TestDB(DatabaseType.MySQL, conn, "MySql.Data.MySqlClient");
+                        break;
+
+                    case "Advanced":
+                        TestDB(DatabaseType.Advanced, connection.Text, string.Empty);
+                        break;
+                }
+            }
+        }
+
+        private void TestDB(DatabaseType dbType, string connectionString, string providerName)
+        {
+            //Let's try....
+            try
+            {
+                //Try and create & connect to the Database
+                //If Advanced provider name etc all in the connection string
+                if (dbType == DatabaseType.Advanced)
+                {
+                    var db = new Database(connectionString);
+
+                    //Get DB Tables Test
+                    var getTablesTest = SqlSyntaxContext.SqlSyntaxProvider.GetTablesInSchema(db).ToList();
+                }
+                else
+                {
+                    //Providing both connection string & provider name
+                    var db = new Database(connectionString, providerName);
+                    
+                    //Get DB Tables Test
+                    var getTablesTest = SqlSyntaxContext.SqlSyntaxProvider.GetTablesInSchema(db).ToList();
+                }
+
+
+                //Show a Success Message Box
+                MessageBox.Show("Database Connection Sucessful", "Database Connection Test", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                //Enable Button
+                CreateProjectBtn.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                var error = string.Format("Database Connection Error: {0}", ex.Message);
+
+                //Show an Error Message Box
+                MessageBox.Show(error, "Database Connection Test", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                //Disable Button
+                CreateProjectBtn.IsEnabled = false;
+            }
+
+        }
     }
 }
