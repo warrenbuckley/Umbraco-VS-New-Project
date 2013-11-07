@@ -226,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseContext.cs" />
+    <Compile Include="UserDto.cs" />
     <Compile Include="VersionPickerDialog.xaml.cs">
       <DependentUpon>VersionPickerDialog.xaml</DependentUpon>
     </Compile>

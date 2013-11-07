@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -323,34 +324,37 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
 
         
-        public void CreateDatabaseSchema()
+        public void CreateDatabaseSchema(DatabaseType dbType)
         {
             //Create a new Umbraco DB object using connection details
             var db = new UmbracoDatabase(connectionString, providerName);
 
+            //Depending on DB Type - Change Provider
+            if (dbType == DatabaseType.MySQL)
+            {
+                SqlSyntaxContext.SqlSyntaxProvider = new MySqlSyntaxProvider();
+            }
+            else if (dbType == DatabaseType.SQLCE)
+            {
+                SqlSyntaxContext.SqlSyntaxProvider = new SqlCeSyntaxProvider();
+            }
+            else
+            {
+                SqlSyntaxContext.SqlSyntaxProvider = new SqlServerSyntaxProvider();
+            }
+
             //Create DB Schema
-            //db.CreateDatabaseSchema();
+            //Get the method we want to run
+            var methodToRun = typeof (PetaPocoExtensions).GetMethod("CreateDatabaseSchema", BindingFlags.Static | BindingFlags.NonPublic);
 
-            //PetaPocoExtensions.CreateDatabaseSchema(db);
+            //Invoke the Method - CreateDatabaseSchema
+            methodToRun.Invoke(null, new object[]{ db, false });
 
 
 
-            //Add Event Handler
-            PetaPocoExtensions.NewTable += new PetaPocoExtensions.CreateTableEventHandler(PetaPocoExtensions.PetaPocoExtensions_NewTable);
+            //Add/update default admin user of admin/admin
+            db.Update<UserDto>("set userPassword = @password where id = @id", new { password = "d9xnUXsUah9gycu7D0TpRYcx19c=", id = 0 });
 
-            //Log
-            LogHelper.Info<Database>("Initializing database schema creation", new Func<object>[0]);
-
-            //Create DB
-            new DatabaseSchemaCreation(db).InitializeDatabaseSchema();
-
-            //Log
-            LogHelper.Info<Database>("Finalized database schema creation", new Func<object>[0]);
-
-            //Remove Event Handler
-            PetaPocoExtensions.NewTable -= new PetaPocoExtensions.CreateTableEventHandler(PetaPocoExtensions.PetaPocoExtensions_NewTable);
-
-           
         }
     }
 }

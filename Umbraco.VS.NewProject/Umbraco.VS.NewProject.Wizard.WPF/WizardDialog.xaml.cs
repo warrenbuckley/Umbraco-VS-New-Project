@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using System.Xml.Linq;
 using umbraco;
 using Umbraco.Core;
 using Umbraco.Core.Configuration;
@@ -29,14 +31,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             set { umbracoVersionStatusBar.Content = string.Format("Umbraco Nuget Version: {0}", value); }
         }
 
-        public enum DatabaseType
-        {
-            SQLCE,
-            SQL,
-            Azure,
-            MySQL,
-            Advanced
-        }
+        public DatabaseContext.DatabaseType dbType { get; set; }
 
         public DatabaseContext _db;
 
@@ -79,38 +74,44 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             switch (selectedDB)
             {
                 case "SQL CE File based Database (Recommended)":
-                    UpdateDatabase(DatabaseType.SQLCE);
+                    dbType = DatabaseContext.DatabaseType.SQLCE;
+                    UpdateDatabase(DatabaseContext.DatabaseType.SQLCE);
                     break;
 
                 case "SQL Server":
                     //Update Database deals with the intergrated security check
-                    UpdateDatabase(DatabaseType.SQL);
+                    dbType = DatabaseContext.DatabaseType.SQL;
+                    UpdateDatabase(DatabaseContext.DatabaseType.SQL);
                     break;
 
                 case "SQL Azure":
-                    UpdateDatabase(DatabaseType.Azure);
+                    dbType = DatabaseContext.DatabaseType.SQL;
+                    UpdateDatabase(DatabaseContext.DatabaseType.Azure);
                     break;
 
                 case "MySQL":
-                    UpdateDatabase(DatabaseType.MySQL);
+                    dbType = DatabaseContext.DatabaseType.MySQL;
+                    UpdateDatabase(DatabaseContext.DatabaseType.MySQL);
                     break;
 
                 case "Advanced":
-                    UpdateDatabase(DatabaseType.Advanced);
+                    dbType = DatabaseContext.DatabaseType.SQL;
+                    UpdateDatabase(DatabaseContext.DatabaseType.Advanced);
                     break;
 
                 default:
                     //As a default fallback - use SQL CE
-                    UpdateDatabase(DatabaseType.SQLCE);
+                    dbType = DatabaseContext.DatabaseType.SQLCE;
+                    UpdateDatabase(DatabaseContext.DatabaseType.SQLCE);
                     break;
             }
 
 
             //Create DB Schema in configured/chosen DB
-            _db.CreateDatabaseSchema();
+            _db.CreateDatabaseSchema(dbType);
 
             //Update Config Status - Updates version number- means all config'd & skips installer
-            UpdateConfigStatus();
+            UpdateConfigStatus(umbracoSitePath);
 
             //Need to figure a way to close dialog from usercontrol
             Window parentWindow = Window.GetWindow(this);
@@ -269,19 +270,19 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             }
         }
 
-        private void UpdateDatabase(DatabaseType dbType)
+        private void UpdateDatabase(DatabaseContext.DatabaseType dbType)
         {
             //Our copy of DatbaseContext from Umbraco.Core
             _db.umbracoSitePath = umbracoSitePath;
 
             switch (dbType)
             {
-                case DatabaseType.SQLCE:
+                case DatabaseContext.DatabaseType.SQLCE:
                     //Setup Datbase to use SQL CE
                     _db.ConfigureEmbeddedDatabaseConnection();
                     break;
 
-                case DatabaseType.SQL:
+                case DatabaseContext.DatabaseType.SQL:
                     //If intergated security checked then
                     if (security.IsChecked == true)
                     {
@@ -293,17 +294,17 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     _db.ConfigureDatabaseConnection(server.Text, databaseName.Text, username.Text, password.Text, DatabaseContext.DatabaseType.SQL);
                     break;
 
-                case DatabaseType.Azure:
+                case DatabaseContext.DatabaseType.Azure:
                     //Normal Azure SQL connection
                     _db.ConfigureDatabaseConnection(server.Text, databaseName.Text, username.Text, password.Text, DatabaseContext.DatabaseType.Azure);
                     break;
 
-                case DatabaseType.MySQL:
+                case DatabaseContext.DatabaseType.MySQL:
                     //Normal MySQL connection
                     _db.ConfigureDatabaseConnection(server.Text, databaseName.Text, username.Text, password.Text, DatabaseContext.DatabaseType.MySQL);
                     break;
 
-                case DatabaseType.Advanced:
+                case DatabaseContext.DatabaseType.Advanced:
                     //Configure using custom DB connection string supplied
                     _db.ConfigureDatabaseConnection(connection.Text);
                     break;
@@ -366,39 +367,39 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                         {
                             //Intergrated security SQL connection
                             conn = DatabaseContext.GetIntegratedSecurityDatabaseConnection(dbServer, dbName);
-                            TestDB(DatabaseType.SQL, conn, "System.Data.SqlClient");
+                            TestDB(DatabaseContext.DatabaseType.SQL, conn, "System.Data.SqlClient");
                             break;
                         }
                         //Normal SQL connection
                         conn = DatabaseContext.GetDatabaseConnection(dbServer, dbName, dbUser, dbPass, DatabaseContext.DatabaseType.SQL);
-                        TestDB(DatabaseType.SQL, conn, "System.Data.SqlClient");
+                        TestDB(DatabaseContext.DatabaseType.SQL, conn, "System.Data.SqlClient");
                         break;
 
                     case "SQL Azure":
                         conn = DatabaseContext.GetDatabaseConnection(dbServer, dbName, dbUser, dbPass, DatabaseContext.DatabaseType.Azure);
-                        TestDB(DatabaseType.Azure, conn, "System.Data.SqlClient");
+                        TestDB(DatabaseContext.DatabaseType.Azure, conn, "System.Data.SqlClient");
                         break;
 
                     case "MySQL":
                         conn = DatabaseContext.GetDatabaseConnection(dbServer, dbName, dbUser, dbPass, DatabaseContext.DatabaseType.MySQL);
-                        TestDB(DatabaseType.MySQL, conn, "MySql.Data.MySqlClient");
+                        TestDB(DatabaseContext.DatabaseType.MySQL, conn, "MySql.Data.MySqlClient");
                         break;
 
                     case "Advanced":
-                        TestDB(DatabaseType.Advanced, connection.Text, string.Empty);
+                        TestDB(DatabaseContext.DatabaseType.Advanced, connection.Text, string.Empty);
                         break;
                 }
             }
         }
 
-        private void TestDB(DatabaseType dbType, string connectionString, string providerName)
+        private void TestDB(DatabaseContext.DatabaseType dbType, string connectionString, string providerName)
         {
             //Let's try....
             try
             {
                 //Try and create & connect to the Database
                 //If Advanced provider name etc all in the connection string
-                if (dbType == DatabaseType.Advanced)
+                if (dbType == DatabaseContext.DatabaseType.Advanced)
                 {
                     var db = new UmbracoDatabase(connectionString);
                 }
@@ -432,16 +433,89 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
         }
 
-        public static void UpdateConfigStatus()
+        public static void UpdateConfigStatus(string path)
         {
             //Check if we are configured already
             if (!GlobalSettings.Configured)
             {
-                //Update the version number in the web.config
-                GlobalSettings.ConfigurationStatus = UmbracoVersion.Current.ToString(3);
-            }
 
-            
+                //Umbraco Version
+                var umbVersion = UmbracoVersion.Current.ToString(3);
+
+
+                //Update the version number in the web.config or in newer from /config/appsettings.config
+                //Path to web.config
+                var webConfig = Path.Combine(path, "Web.config");
+
+                //Open web.config
+                var xml = XDocument.Load(webConfig, LoadOptions.PreserveWhitespace);
+
+                //Get First XML element <connectionStrings>
+                var appSettings = xml.Root.Descendants("appSettings").Single();
+
+                //Check if attribute on <appSettings configSource="config\appSettings.config">
+                var appSettingsSource = appSettings.Attribute("configSource");
+
+
+                //If we find it - load in config file from configSource attrbiute
+                if (appSettingsSource != null)
+                {
+                    //Get the value from the attribute as it exists
+                    var configSourcePath = appSettingsSource.Value;
+
+                    //Path to appsettings.config
+                    var appSettingConfig = Path.Combine(path, configSourcePath);
+
+                    //Open web.config
+                    var appXML = XDocument.Load(appSettingConfig, LoadOptions.PreserveWhitespace);
+
+                    //Get First XML element <appSettings>
+                    var appSettingsConfig = appXML.Root;
+
+                    // Update add if it exists, or else create a new connection string
+                    var settingConfig = appSettingsConfig.Descendants("add").FirstOrDefault(s => s.Attribute("key").Value == "umbracoConfigurationStatus");
+
+
+                    //Not found a connection string XML element - lets add it
+                    if (settingConfig == null)
+                    {
+                        //Add an XML element into <appSettings>
+                        //<add key="umbracoConfigurationStatus" value="" />
+                        appSettingsConfig.Add(new XElement("add", new XAttribute("key", "umbracoConfigurationStatus"),new XAttribute("value", umbVersion)));
+                    }
+                    else
+                    {
+                        //Update the existing attribute values on the <add /> XML elements
+                        settingConfig.Attribute("value").Value = umbVersion;
+                    }
+
+                    //Save file
+                    appXML.Save(appSettingConfig);
+
+                    //Finished up
+                    return;
+                }
+
+                //OK no configSource - it's in the web.config
+                // Update connectionString if it exists, or else create a new connection string
+                var setting = appSettings.Descendants("add").FirstOrDefault(s => s.Attribute("key").Value == "umbracoConfigurationStatus");
+
+                //Not found a connection string XML element - lets add it
+                if (setting == null)
+                {
+                    //Add an XML element into <connectionStrings>
+                    //<add name="connectionName" connectionString="connectionString" providerName="providerName" />
+                    appSettings.Add(new XElement("add", new XAttribute("key", "umbracoConfigurationStatus"), new XAttribute("value", umbVersion)));
+                }
+                else
+                {
+                    //Update the existing attribute values on the <add /> XML elements
+                    setting.Attribute("value").Value = umbVersion;
+                }
+
+                //Save file
+                xml.Save(webConfig);
+            }
         }
 
     }
