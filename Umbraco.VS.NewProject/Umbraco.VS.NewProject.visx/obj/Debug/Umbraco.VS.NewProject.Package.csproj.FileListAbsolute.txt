@@ -19,3 +19,9 @@ C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\obj\Debug\Umbraco.VS.NewProject.Package.dll
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\obj\Debug\Umbraco.VS.NewProject.Package.pdb
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\obj\Debug\extension.vsixmanifest
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\businesslogic.dll
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\umbraco.DataLayer.dll
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\MySql.Data.dll
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\Microsoft.ApplicationBlocks.Data.dll
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\businesslogic.xml
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\umbraco.DataLayer.xml

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using umbraco;
+using Umbraco.Core;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence;
@@ -321,23 +322,35 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         }
 
 
-        //TODO: Need to fix Create DB Schema
+        
         public void CreateDatabaseSchema()
         {
-            //If provider is CE then maybe connectionString needs full path like save DB did
-
-            //Create a path to an Umbraco.sdf file in App_Data
-            var path = Path.Combine(umbracoSitePath, "App_Data", "Umbraco.sdf");
-
-            //Modified Connection String for CE creation
-            var modConnection = string.Format("Data Source={0};Flush Interval=1;", path);
-
-
             //Create a new Umbraco DB object using connection details
-            var db = new UmbracoDatabase(modConnection, providerName);
+            var db = new UmbracoDatabase(connectionString, providerName);
 
             //Create DB Schema
-            db.CreateDatabaseSchema();
+            //db.CreateDatabaseSchema();
+
+            //PetaPocoExtensions.CreateDatabaseSchema(db);
+
+
+
+            //Add Event Handler
+            PetaPocoExtensions.NewTable += new PetaPocoExtensions.CreateTableEventHandler(PetaPocoExtensions.PetaPocoExtensions_NewTable);
+
+            //Log
+            LogHelper.Info<Database>("Initializing database schema creation", new Func<object>[0]);
+
+            //Create DB
+            new DatabaseSchemaCreation(db).InitializeDatabaseSchema();
+
+            //Log
+            LogHelper.Info<Database>("Finalized database schema creation", new Func<object>[0]);
+
+            //Remove Event Handler
+            PetaPocoExtensions.NewTable -= new PetaPocoExtensions.CreateTableEventHandler(PetaPocoExtensions.PetaPocoExtensions_NewTable);
+
+           
         }
     }
 }

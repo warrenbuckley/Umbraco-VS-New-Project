@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
+using umbraco;
 using Umbraco.Core;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.Persistence;
-using Umbraco.Core.Persistence.SqlSyntax;
 using Path = System.IO.Path;
 
 namespace Umbraco.VS.NewProject.Wizard.WPF
@@ -53,7 +44,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         {
             InitializeComponent();
 
-            //New Up Object
+            //New Up DB Object
             _db = new DatabaseContext();
         }
 
@@ -115,8 +106,11 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             }
 
 
-            //TODO: Create DB Schema
-            //_db.CreateDatabaseSchema();
+            //Create DB Schema in configured/chosen DB
+            _db.CreateDatabaseSchema();
+
+            //Update Config Status - Updates version number- means all config'd & skips installer
+            UpdateConfigStatus();
 
             //Need to figure a way to close dialog from usercontrol
             Window parentWindow = Window.GetWindow(this);
@@ -406,18 +400,16 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 //If Advanced provider name etc all in the connection string
                 if (dbType == DatabaseType.Advanced)
                 {
-                    var db = new Database(connectionString);
-
-                    //Get DB Tables Test
-                    var getTablesTest = SqlSyntaxContext.SqlSyntaxProvider.GetTablesInSchema(db).ToList();
+                    var db = new UmbracoDatabase(connectionString);
                 }
                 else
                 {
                     //Providing both connection string & provider name
-                    var db = new Database(connectionString, providerName);
-                    
-                    //Get DB Tables Test
-                    var getTablesTest = SqlSyntaxContext.SqlSyntaxProvider.GetTablesInSchema(db).ToList();
+                    var db = new UmbracoDatabase(connectionString, providerName);
+
+                    //Now open the connection to test it out...
+                    //Exception will fire if it can connect
+                    db.OpenSharedConnection();
                 }
 
 
@@ -439,5 +431,18 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             }
 
         }
+
+        public static void UpdateConfigStatus()
+        {
+            //Check if we are configured already
+            if (!GlobalSettings.Configured)
+            {
+                //Update the version number in the web.config
+                GlobalSettings.ConfigurationStatus = UmbracoVersion.Current.ToString(3);
+            }
+
+            
+        }
+
     }
 }
