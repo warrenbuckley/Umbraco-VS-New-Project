@@ -234,7 +234,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                         installer.InstallPackage(onlineRepo, project, packageID, umbracoNugetVersion, false, false);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     //Use Online Repo to install packages - will be slower as got to fetch them over the wire
                     //Connect to the official package repository
