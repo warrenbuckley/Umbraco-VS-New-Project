@@ -25,6 +25,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             set { _umbracoSitePath = value; }
         }
 
+        public string umbracoVersionNumber { get; set; }
+
         public string umbracoVersion
         {
             get { return umbracoVersionStatusBar.Content.ToString(); }
@@ -111,7 +113,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             _db.CreateDatabaseSchema(dbType);
 
             //Update Config Status - Updates version number- means all config'd & skips installer
-            UpdateConfigStatus(umbracoSitePath);
+            //Substring - First 5 characters to get 7.0.0 as opposed to 7.0.0-RC
+            UpdateConfigStatus(umbracoSitePath, umbracoVersionNumber.Substring(0, 5));
 
             //Need to figure a way to close dialog from usercontrol
             Window parentWindow = Window.GetWindow(this);
@@ -433,14 +436,14 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
         }
 
-        public static void UpdateConfigStatus(string path)
+        public static void UpdateConfigStatus(string path, string version)
         {
             //Check if we are configured already
             if (!GlobalSettings.Configured)
             {
 
                 //Umbraco Version
-                var umbVersion = UmbracoVersion.Current.ToString(3);
+                var umbVersion = version;
 
 
                 //Update the version number in the web.config or in newer from /config/appsettings.config

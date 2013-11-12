@@ -326,8 +326,6 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         
         public void CreateDatabaseSchema(DatabaseType dbType)
         {
-            //Create a new Umbraco DB object using connection details
-            var db = new UmbracoDatabase(connectionString, providerName);
 
             //Depending on DB Type - Change Provider
             if (dbType == DatabaseType.MySQL)
@@ -337,19 +335,30 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             else if (dbType == DatabaseType.SQLCE)
             {
                 SqlSyntaxContext.SqlSyntaxProvider = new SqlCeSyntaxProvider();
+                
+                //Create a path to an Umbraco.sdf file in App_Data
+                var path = Path.Combine(umbracoSitePath, "App_Data", "Umbraco.sdf");
+
+                //Modified Connection String for CE creation
+                var modConnection = string.Format("Data Source={0};Flush Interval=1;", path);
+
+                //Update connection string
+                connectionString = modConnection;
             }
             else
             {
                 SqlSyntaxContext.SqlSyntaxProvider = new SqlServerSyntaxProvider();
             }
 
+            //Create a new Umbraco DB object using connection details
+            var db = new UmbracoDatabase(connectionString, providerName);
+
             //Create DB Schema
             //Get the method we want to run
             var methodToRun = typeof (PetaPocoExtensions).GetMethod("CreateDatabaseSchema", BindingFlags.Static | BindingFlags.NonPublic);
 
-            //Invoke the Method - CreateDatabaseSchema
+            //Invoke the Method - CreateDatabaseSchema(db, false)
             methodToRun.Invoke(null, new object[]{ db, false });
-
 
 
             //Add/update default admin user of admin/admin

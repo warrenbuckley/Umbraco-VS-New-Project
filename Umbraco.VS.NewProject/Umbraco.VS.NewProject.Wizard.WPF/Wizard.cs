@@ -7,6 +7,8 @@ using System.Linq.Dynamic;
 using System.Net;
 using System.Web.Helpers;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using EnvDTE;
 using Microsoft.VisualStudio.TemplateWizard;
 using NuGet;
@@ -90,7 +92,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     Content                 = versionDialog,
                     SizeToContent           = SizeToContent.WidthAndHeight,
                     ResizeMode              = ResizeMode.NoResize,
-                    WindowStartupLocation   = WindowStartupLocation.CenterScreen
+                    WindowStartupLocation   = WindowStartupLocation.CenterScreen,
+                    Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
                 };
 
                 //Show the window/dialog
@@ -104,9 +107,10 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
 
                 //Wizard Dialog (WPF Usercontrol)
-                var wizard              = new WizardDialog();
-                wizard.umbracoSitePath  = _destinationFolder;
-                wizard.umbracoVersion   = chosenVersion;
+                var wizard                  = new WizardDialog();
+                wizard.umbracoSitePath      = _destinationFolder;
+                wizard.umbracoVersion       = chosenVersion;
+                wizard.umbracoVersionNumber = chosenVersion;
 
                 //Create a WPF Window
                 //Add our WPF UserControl to the window
@@ -116,7 +120,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     Content                 = wizard,
                     SizeToContent           = SizeToContent.WidthAndHeight,
                     ResizeMode              = ResizeMode.NoResize,
-                    WindowStartupLocation   = WindowStartupLocation.CenterScreen
+                    WindowStartupLocation   = WindowStartupLocation.CenterScreen,
+                    Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
                 };
 
                 //Show the window/dialog
