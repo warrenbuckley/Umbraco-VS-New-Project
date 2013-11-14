@@ -1,4 +1,5 @@
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\umb-new-blue.ico
+C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\Umbraco.VS.NewProject.Package.dll.config
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\Umbraco.VS.NewProject.Package.vsix
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\extension.vsixmanifest
 C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.visx\bin\Debug\Umbraco.VS.NewProject.Wizard.WPF.dll
