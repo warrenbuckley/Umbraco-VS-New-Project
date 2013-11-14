@@ -1,6 +1,6 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Id="Umbraco.VS.NewProject.Package..bce59885-b7d0-4e94-9fdb-d2665d2d021c" Version="1.2.2.1" Language="en-US" Publisher="Umbraco Community" />
+    <Identity Id="Umbraco.VS.NewProject.Package..bce59885-b7d0-4e94-9fdb-d2665d2d021c" Version="1.2.2.2" Language="en-US" Publisher="Umbraco Community" />
     <DisplayName>Umbraco Community - File New Project</DisplayName>
     <Description xml:space="preserve">This installs a File, New Project template that allows you to easily create a new Umbraco project and fetches the latest version from NuGet</Description>
     <Icon>umb-new-blue.ico</Icon>
@@ -16,6 +16,6 @@
   </Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" Path="ProjectTemplates" />
-    <Asset Type="Microsoft.VisualStudio.Assembly" Path="Umbraco.VS.NewProject.Wizard.WPF.dll" AssemblyName="Umbraco.VS.NewProject.Wizard.WPF, Version=1.2.2.1, Culture=neutral, PublicKeyToken=null" />
+    <Asset Type="Microsoft.VisualStudio.Assembly" Path="Umbraco.VS.NewProject.Wizard.WPF.dll" AssemblyName="Umbraco.VS.NewProject.Wizard.WPF, Version=1.2.2.2, Culture=neutral, PublicKeyToken=null" />
   </Assets>
 </PackageManifest>

@@ -92,8 +92,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     Content                 = versionDialog,
                     SizeToContent           = SizeToContent.WidthAndHeight,
                     ResizeMode              = ResizeMode.NoResize,
-                    WindowStartupLocation   = WindowStartupLocation.CenterScreen,
-                    Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
+                    WindowStartupLocation   = WindowStartupLocation.CenterScreen
+                    //Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
                 };
 
                 //Show the window/dialog
@@ -120,8 +120,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     Content                 = wizard,
                     SizeToContent           = SizeToContent.WidthAndHeight,
                     ResizeMode              = ResizeMode.NoResize,
-                    WindowStartupLocation   = WindowStartupLocation.CenterScreen,
-                    Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
+                    WindowStartupLocation   = WindowStartupLocation.CenterScreen
+                    //Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
                 };
 
                 //Show the window/dialog
