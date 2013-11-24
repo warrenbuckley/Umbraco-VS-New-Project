@@ -324,7 +324,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
 
         
-        public void CreateDatabaseSchema(DatabaseType dbType)
+        public void CreateDatabaseSchema(DatabaseType dbType, bool? skipInstaller)
         {
 
             //Depending on DB Type - Change Provider
@@ -361,9 +361,13 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             methodToRun.Invoke(null, new object[]{ db, false });
 
 
-            //Add/update default admin user of admin/admin
-            db.Update<UserDto>("set userPassword = @password where id = @id", new { password = "d9xnUXsUah9gycu7D0TpRYcx19c=", id = 0 });
-
+            //Only Add/Update default admin user of admin/admin
+            if (skipInstaller == true)
+            {
+                //Add/update default admin user of admin/admin
+                db.Update<UserDto>("set userPassword = @password where id = @id", new { password = "d9xnUXsUah9gycu7D0TpRYcx19c=", id = 0 });
+            }
+            
         }
     }
 }

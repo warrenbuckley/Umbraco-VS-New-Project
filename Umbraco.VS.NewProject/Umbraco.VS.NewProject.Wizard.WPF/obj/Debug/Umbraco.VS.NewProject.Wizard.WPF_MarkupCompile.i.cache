@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\inetpub\wwwroot\Personal\Umbraco VS New Project\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\
+C:\inetpub\wwwroot\Personal\UmbracoVSProject\Umbraco.VS.NewProject\Umbraco.VS.NewProject.Wizard.WPF\obj\Debug\
 Umbraco.VS.NewProject.Wizard.WPF
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 22114434911
 
 10115571509
-80-1021359879
+80361329203
 VersionPickerDialog.xaml;WizardDialog.xaml;
 
 False

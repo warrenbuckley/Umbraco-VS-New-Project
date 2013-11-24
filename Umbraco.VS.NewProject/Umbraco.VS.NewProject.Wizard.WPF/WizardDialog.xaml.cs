@@ -108,13 +108,19 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     break;
             }
 
+            var skipInstaller = skipWebInstaller.IsChecked;
 
-            //Create DB Schema in configured/chosen DB
-            _db.CreateDatabaseSchema(dbType);
+            //Only add config status version flag if skipping web installer
+            if (skipInstaller == true)
+            {
+                //Update Config Status - Updates version number- means all config'd & skips installer
+                //Substring - First 5 characters to get 7.0.0 as opposed to 7.0.0-RC
+                UpdateConfigStatus(umbracoSitePath, umbracoVersionNumber.Substring(0, 5));
 
-            //Update Config Status - Updates version number- means all config'd & skips installer
-            //Substring - First 5 characters to get 7.0.0 as opposed to 7.0.0-RC
-            UpdateConfigStatus(umbracoSitePath, umbracoVersionNumber.Substring(0, 5));
+                //Create DB Schema in configured/chosen DB & update admin user
+                _db.CreateDatabaseSchema(dbType, skipInstaller);
+
+            }
 
             //Need to figure a way to close dialog from usercontrol
             Window parentWindow = Window.GetWindow(this);
@@ -518,6 +524,17 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
                 //Save file
                 xml.Save(webConfig);
+            }
+        }
+
+        private void skipWebInstallerClick(object sender, RoutedEventArgs e)
+        {
+            //Security checkbox checked
+            if (skipWebInstaller.IsChecked == true)
+            {
+                MessageBox.Show(
+                    "Remember the installer will be skipped and you can login straight in, with admin & admin.",
+                    "Remember", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
