@@ -31,6 +31,8 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
         private string _destinationFolder;
         private IComponentModel _serviceHost;
 
+        const string _onlineNugetPackageLocation = "https://packages.nuget.org/api/v2";
+
         /// <summary>
         /// Runs custom wizard logic at the beginning of a template wizard run.
         /// </summary>
@@ -57,7 +59,7 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
             //Destination Folder - C:\\inetpub\\wwwroot\\UmbracoWebsite2\\UmbracoWebsite2
             _destinationFolder = replacementsDictionary["$destinationdirectory$"];
-	
+
 
             //Debug
             Debug.WriteLine("Umbraco New Project - RunStarted() event");
@@ -75,12 +77,12 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
             try
             {
                 //File Path stuff
-                _csProjPath     = project.FileName;
-                _projectPath    = Path.GetDirectoryName(_csProjPath);
-                _solutionPath   = Path.GetDirectoryName(_projectPath);
-                _packagePath    = Path.Combine(_solutionPath, "packages");
+                _csProjPath = project.FileName;
+                _projectPath = Path.GetDirectoryName(_csProjPath);
+                _solutionPath = Path.GetDirectoryName(_projectPath);
+                _packagePath = Path.Combine(_solutionPath, "packages");
 
-                
+
                 //Version Picker Dialog (WPF Usercontrol)
                 var versionDialog = new VersionPickerDialog();
 
@@ -88,11 +90,11 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 //Add our WPF UserControl to the window
                 Window versionWindow = new Window
                 {
-                    Title                   = "Create New Umbraco Project Wizard",
-                    Content                 = versionDialog,
-                    SizeToContent           = SizeToContent.WidthAndHeight,
-                    ResizeMode              = ResizeMode.NoResize,
-                    WindowStartupLocation   = WindowStartupLocation.CenterScreen
+                    Title = "Create New Umbraco Project Wizard",
+                    Content = versionDialog,
+                    SizeToContent = SizeToContent.WidthAndHeight,
+                    ResizeMode = ResizeMode.NoResize,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
                     //Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
                 };
 
@@ -107,20 +109,20 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
 
                 //Wizard Dialog (WPF Usercontrol)
-                var wizard                  = new WizardDialog();
-                wizard.umbracoSitePath      = _destinationFolder;
-                wizard.umbracoVersion       = chosenVersion;
+                var wizard = new WizardDialog();
+                wizard.umbracoSitePath = _destinationFolder;
+                wizard.umbracoVersion = chosenVersion;
                 wizard.umbracoVersionNumber = chosenVersion;
 
                 //Create a WPF Window
                 //Add our WPF UserControl to the window
                 Window myWindow = new Window
                 {
-                    Title                   = "Create New Umbraco Project Wizard",
-                    Content                 = wizard,
-                    SizeToContent           = SizeToContent.WidthAndHeight,
-                    ResizeMode              = ResizeMode.NoResize,
-                    WindowStartupLocation   = WindowStartupLocation.CenterScreen
+                    Title = "Create New Umbraco Project Wizard",
+                    Content = wizard,
+                    SizeToContent = SizeToContent.WidthAndHeight,
+                    ResizeMode = ResizeMode.NoResize,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
                     //Icon                    = new BitmapImage(new Uri("umb-new-blue.ico", UriKind.Relative))
                 };
 
@@ -185,14 +187,14 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
 
             //ID of the package to be looked up
             string packageID = "UmbracoCMS";
-            
+
 
             //Check serviceHost is not null otherwise NuGet extension points will be able to be fetched
             if (_serviceHost != null)
             {
                 //Get Nuget Extensibilty points
                 var nugetEvents = _serviceHost.GetService<IVsPackageInstallerEvents>();
-                var installer   = _serviceHost.GetService<IVsPackageInstaller>();
+                var installer = _serviceHost.GetService<IVsPackageInstaller>();
                 var uninstaller = _serviceHost.GetService<IVsPackageUninstaller>();
                 var packageInfo = _serviceHost.GetService<IVsPackageInstallerServices>();
 
@@ -203,9 +205,9 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                 _dte.StatusBar.Text = "Umbraco New Project - Installing Nuget Packages";
 
                 //Wire up events
-                nugetEvents.PackageInstalling       += nugetEvents_PackageInstalling;
-                nugetEvents.PackageInstalled        += nugetEvents_PackageInstalled;
-                nugetEvents.PackageReferenceAdded   += nugetEvents_PackageReferenceAdded;
+                nugetEvents.PackageInstalling += nugetEvents_PackageInstalling;
+                nugetEvents.PackageInstalled += nugetEvents_PackageInstalled;
+                nugetEvents.PackageReferenceAdded += nugetEvents_PackageReferenceAdded;
 
 
                 //Get local %LocalAppData% folder - C:\Users\Warren Buckley\AppData\Local
@@ -231,31 +233,21 @@ namespace Umbraco.VS.NewProject.Wizard.WPF
                     }
                     else
                     {
-                        //Use Online Repo to install packages - will be slower as got to fetch them over the wire
-                        //Connect to the official package repository
-                        IPackageRepository onlineRepo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-
                         //Download and unzip the package/s - Gets all the dependcies needed as well
-                        installer.InstallPackage(onlineRepo, project, packageID, umbracoNugetVersion, false, false);
+                        Project p = project;
+                        installer.InstallPackage(_onlineNugetPackageLocation, p, packageID, umbracoNugetVersion, false);
                     }
                 }
                 catch (Exception ex)
                 {
-                    //Use Online Repo to install packages - will be slower as got to fetch them over the wire
-                    //Connect to the official package repository
-                    IPackageRepository onlineRepo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-
                     //Download and unzip the package/s - Gets all the dependcies needed as well
-                    installer.InstallPackage(onlineRepo, project, packageID, umbracoNugetVersion, false, false);
+                    installer.InstallPackage(_onlineNugetPackageLocation, project, packageID, umbracoNugetVersion, false);
 
                     //throw;
                 }
-                
-
-                
             }
         }
-        
+
 
         private void nugetEvents_PackageInstalling(IVsPackageMetadata metadata)
         {
